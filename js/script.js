@@ -440,84 +440,28 @@ if(rsvpForm){
    SCROLL ANIMATION
 ===================================================== */
 
+// change this line in TRUE to activate animation
+const ENABLE_SCROLL_ANIMATIONS=false;
 
-const animatedElements =
-document.querySelectorAll(
-".section, .card, .timeline-item"
-);
+const animatedElements=document.querySelectorAll(".card,.timeline-item");
 
-
-
-
-const observer =
-new IntersectionObserver(
-
-(entries)=>{
-
-
+if(ENABLE_SCROLL_ANIMATIONS){
+const observer=new IntersectionObserver((entries)=>{
 entries.forEach(function(entry){
-
-
-    if(entry.isIntersecting){
-
-
-        entry.target.style.opacity="1";
-
-
-        entry.target.style.transform=
-        "translateY(0)";
-
-
-    }
-
-
-});
-
-
-},
-
-{
-
-threshold:0.15
-
+if(entry.isIntersecting){
+entry.target.classList.add("visible");
 }
-
-
-);
-
-
-
-
-
-
+});
+},{threshold:0.1});
 
 animatedElements.forEach(function(element){
-
-
-    element.style.opacity="0";
-
-
-    element.style.transform=
-    "translateY(40px)";
-
-
-    element.style.transition=
-    "all 0.8s ease";
-
-
-
-    observer.observe(element);
-
-
-
+observer.observe(element);
 });
-
-
-
-
-
-
-
+}else{
+animatedElements.forEach(function(element){
+element.classList.add("visible");
+});
+}
 
 
 /* =====================================================
@@ -695,6 +639,72 @@ updateCountdown,
 1000
 );
 
+// /* =====================================================
+   // DINO GAME START OVERLAY
+// ===================================================== */
+
+
+// const dinoOverlay = 
+// document.getElementById("dino-start-overlay");
+
+
+// const dinoFrame = 
+// document.getElementById("dino-frame");
+
+
+
+// if(dinoOverlay && dinoFrame){
+
+
+    // dinoOverlay.addEventListener(
+        // "click",
+        // function(){
+
+
+            // // nasconde il messaggio iniziale
+
+            // dinoOverlay.style.display="none";
+
+
+            // // recupera finestra iframe
+
+            // const gameWindow = 
+            // dinoFrame.contentWindow;
+
+
+
+            // // manda evento touch al gioco
+
+            // gameWindow.dispatchEvent(
+                // new Event("touchstart")
+            // );
+
+
+            // // manda anche spazio tastiera
+
+            // gameWindow.dispatchEvent(
+                // new KeyboardEvent(
+                    // "keyup",
+                    // {
+                        // code:"Space",
+                        // key:" "
+                    // }
+                // )
+            // );
+
+
+            // // focus iframe
+
+            // gameWindow.focus();
+
+
+        // }
+    // );
+
+
+// }
+
+
 /* =====================================================
    DINO GAME START OVERLAY
 ===================================================== */
@@ -712,54 +722,52 @@ document.getElementById("dino-frame");
 if(dinoOverlay && dinoFrame){
 
 
+    function startDinoGame(){
+
+
+        // nasconde overlay
+
+        dinoOverlay.style.display="none";
+
+
+        // permette al canvas di ricevere touch
+
+        dinoOverlay.style.pointerEvents="none";
+
+
+        // manda comando dentro iframe
+
+        dinoFrame.contentWindow.postMessage(
+            "START_DINO",
+            "*"
+        );
+
+
+    }
+
+
+
+    // desktop
+
     dinoOverlay.addEventListener(
         "click",
-        function(){
-
-
-            // nasconde il messaggio iniziale
-
-            dinoOverlay.style.display="none";
-
-
-            // recupera finestra iframe
-
-            const gameWindow = 
-            dinoFrame.contentWindow;
+        startDinoGame
+    );
 
 
 
-            // manda evento touch al gioco
+    // mobile
 
-            gameWindow.dispatchEvent(
-                new Event("touchstart")
-            );
-
-
-            // manda anche spazio tastiera
-
-            gameWindow.dispatchEvent(
-                new KeyboardEvent(
-                    "keyup",
-                    {
-                        code:"Space",
-                        key:" "
-                    }
-                )
-            );
-
-
-            // focus iframe
-
-            gameWindow.focus();
-
-
+    dinoOverlay.addEventListener(
+        "touchstart",
+        startDinoGame,
+        {
+            passive:true
         }
     );
 
 
 }
-
 
 /* =====================================================
    INITIAL LOAD

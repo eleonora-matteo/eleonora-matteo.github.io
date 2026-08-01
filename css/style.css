@@ -362,22 +362,17 @@ padding:70px 20px;
 }
 
 
-/* ANIMATION */
+/* ANIMATION CONTROL */
 
-.card,
-.timeline-item{
-animation:fadeIn 1s ease;
+.card,.timeline-item{
+opacity:1;
+transform:none;
+transition:all .8s ease;
 }
 
-@keyframes fadeIn{
-from{
-opacity:0;
-transform:translateY(30px);
-}
-to{
+.card.visible,.timeline-item.visible{
 opacity:1;
 transform:translateY(0);
-}
 }
 
 
@@ -566,6 +561,10 @@ margin:20px 0 15px;
     background-image:url("../assets/images/home_1.png");
     background-size:cover;
     background-position:center;
+	
+	-webkit-user-select:none;
+    user-select:none;
+    touch-action:manipulation;
 
 }
 
@@ -589,12 +588,32 @@ margin:20px 0 15px;
 
     display:block;
 	
-	pointer-events:auto;
+	/* pointer-events:auto; */
 
 
 }
 
 /* schermata iniziale sopra iframe */
+
+/* #dino-start-overlay{ */
+
+    /* position:absolute; */
+
+    /* inset:0; */
+
+    /* display:flex; */
+
+    /* justify-content:center; */
+
+    /* align-items:center; */
+
+    /* background:rgba(247,245,239,0.85); */
+
+    /* cursor:pointer; */
+
+    /* z-index:10; */
+
+/* } */
 
 #dino-start-overlay{
 
@@ -613,6 +632,8 @@ margin:20px 0 15px;
     cursor:pointer;
 
     z-index:10;
+
+    touch-action: manipulation;
 
 }
 

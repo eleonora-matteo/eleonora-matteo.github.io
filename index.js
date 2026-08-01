@@ -138,9 +138,27 @@ function setupGameReset() {
     hasAddedEventListenersForRestart = true;
 
     setTimeout(() => {
-      window.addEventListener("keyup", reset, { once: true });
-      window.addEventListener("touchstart", reset, { once: true });
-    }, 1000);
+      
+	  
+		// window.addEventListener("keyup", reset, { once: true });
+		// window.addEventListener("touchstart", reset, { once: true });
+		window.addEventListener("keyup", reset, { once: true });
+		window.addEventListener("touchstart", reset, { once: true });
+
+		// START GAME FROM PARENT WEBSITE OVERLAY
+
+		window.addEventListener(
+			"message",
+			function(event){
+
+				if(event.data === "START_DINO"){
+
+				  reset();
+				}
+			}
+		);
+	}, 1000);
+	
   }
 }
 
