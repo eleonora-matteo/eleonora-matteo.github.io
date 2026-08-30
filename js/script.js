@@ -614,7 +614,11 @@ async function loadDinoRanking() {
 
     try {
 
-        const response = await fetch(DINO_RANKING_URL);
+		console.log("Prima del fetch");
+
+		const response = await fetch(DINO_RANKING_URL);
+
+		console.log("Fetch completato", response.status);
 
         if (!response.ok) {
             throw new Error("Unable to load ranking");
