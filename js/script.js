@@ -735,10 +735,6 @@ function escapeRankingHTML(text) {
 }
 
 
-// Load ranking when website opens
-loadDinoRanking();
-
-
 
 /* =====================================================
    INITIAL LOAD
@@ -752,13 +748,11 @@ function(){
 
     changeLanguage("it");
 
-
-
     if(successMessage){
-
         successMessage.style.display="none";
-
     }
 
+	// Load ranking when website opens
+	loadDinoRanking();
 
 });
