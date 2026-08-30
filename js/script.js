@@ -700,24 +700,61 @@ window.addEventListener("message", function(event) {
         dinoOverlay.style.pointerEvents = "auto";
 
         if (dinoOverlayTitle) {
-            dinoOverlayTitle.innerHTML =
-                currentLanguage === "it"
-                    ? "🦖<br>Vuoi riprovare?"
-                    : "🦖<br>Play again?";
+			
+			dinoOverlayTitle.setAttribute(
+				"data-it",
+				"🦖<br>Vuoi riprovare?"
+			);
+
+			dinoOverlayTitle.setAttribute(
+				"data-en",
+				"🦖<br>Play again?"
+			);
+
+			dinoOverlayTitle.innerHTML =
+				currentLanguage === "it"
+					? dinoOverlayTitle.getAttribute("data-it")
+					: dinoOverlayTitle.getAttribute("data-en");
+					
         }
 
         if (dinoLastScore) {
             dinoLastScore.style.display = "block";
-            dinoLastScore.textContent =
-                (currentLanguage === "it" ? "Punteggio: " : "Score: ")
-                + finalScore;
+
+			dinoLastScore.setAttribute(
+				"data-it",
+				"Punteggio: " + finalScore
+			);
+
+			dinoLastScore.setAttribute(
+				"data-en",
+				"Score: " + finalScore
+			);
+
+			dinoLastScore.textContent =
+				currentLanguage === "it"
+					? dinoLastScore.getAttribute("data-it")
+					: dinoLastScore.getAttribute("data-en");
+
         }
 
         if (dinoStartButton) {
-            dinoStartButton.textContent =
-                currentLanguage === "it"
-                    ? "GIOCA ANCORA"
-                    : "PLAY AGAIN";
+
+			dinoStartButton.setAttribute(
+				"data-it",
+				"GIOCA ANCORA"
+			);
+
+			dinoStartButton.setAttribute(
+				"data-en",
+				"PLAY AGAIN"
+			);
+
+			dinoStartButton.textContent =
+				currentLanguage === "it"
+					? dinoStartButton.getAttribute("data-it")
+					: dinoStartButton.getAttribute("data-en");
+
         }
 
         // Keep previous name, but allow the user to change it
@@ -831,9 +868,16 @@ async function loadDinoRanking() {
 
         if (topFive.length === 0) {
 
-            rankingContainer.innerHTML =
-                '<div class="ranking-loading">Nessun punteggio ancora.</div>';
-
+			rankingContainer.innerHTML = `
+				<div class="ranking-loading"
+					 data-it="Nessun punteggio ancora."
+					 data-en="No scores yet.">
+					${currentLanguage === "it"
+						? "Nessun punteggio ancora."
+						: "No scores yet."}
+				</div>
+			`;
+			
             return;
         }
 
@@ -871,8 +915,15 @@ async function loadDinoRanking() {
             error
         );
 
-        rankingContainer.innerHTML =
-            '<div class="ranking-loading">Classifica non disponibile.</div>';
+		rankingContainer.innerHTML = `
+			<div class="ranking-loading"
+				 data-it="Classifica non disponibile."
+				 data-en="Ranking unavailable.">
+				${currentLanguage === "it"
+					? "Classifica non disponibile."
+					: "Ranking unavailable."}
+			</div>
+		`;
 
     }
 

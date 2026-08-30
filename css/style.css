@@ -568,8 +568,6 @@ margin:20px 0 15px;
 	touch-action:none;
 }
 
-}
-
 
 #game {
 
@@ -799,6 +797,8 @@ margin:20px 0 15px;
         padding: 8px 12px;
         margin: 8px auto;
         box-sizing: border-box;
+		font-size: 16px;
+		
     }
 
     #dino-start-button {
