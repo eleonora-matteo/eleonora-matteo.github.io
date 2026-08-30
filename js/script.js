@@ -555,40 +555,178 @@ updateCountdown,
 1000
 );
 
+
 /* =====================================================
-   DINO GAME START OVERLAY
+   DINO GAME
 ===================================================== */
 
-const dinoOverlay =
-document.getElementById("dino-start-overlay");
+const dinoOverlay = document.getElementById("dino-start-overlay");
+const dinoFrame = document.getElementById("dino-frame");
+const dinoStartButton = document.getElementById("dino-start-button");
+const dinoPlayerNameInput = document.getElementById("dino-player-name");
+const dinoOverlayTitle = document.getElementById("dino-overlay-title");
+const dinoLastScore = document.getElementById("dino-last-score");
 
-const dinoFrame =
-document.getElementById("dino-frame");
+let dinoPlayerName = "";
 
-if(dinoOverlay && dinoFrame){
 
-    function startDinoGame(event){
+/* =====================================================
+   START GAME
+===================================================== */
 
-        if(event){
-            event.preventDefault();
-        }
-
-        dinoOverlay.style.display = "none";
-        dinoOverlay.style.pointerEvents = "none";
-
-        dinoFrame.contentWindow.postMessage(
-            "START_DINO",
-            "*"
-        );
-
-        dinoFrame.focus();
+function startDinoGame() {
+    if (!dinoOverlay || !dinoFrame || !dinoPlayerNameInput) {
+        return;
     }
 
-    dinoOverlay.addEventListener(
-        "pointerdown",
-        startDinoGame
-    );
+    const name = dinoPlayerNameInput.value.trim();
+
+    if (!name) {
+        alert(
+            currentLanguage === "it"
+                ? "Inserisci il tuo nome!"
+                : "Enter your name!"
+        );
+        dinoPlayerNameInput.focus();
+        return;
+    }
+
+    // Remember player name for following games
+    dinoPlayerName = name;
+
+    // Hide overlay
+    dinoOverlay.style.display = "none";
+    dinoOverlay.style.pointerEvents = "none";
+
+    // Start game inside iframe
+    dinoFrame.contentWindow.postMessage("START_DINO", "*");
+    dinoFrame.focus();
 }
+
+if (dinoStartButton) {
+    dinoStartButton.addEventListener("click", startDinoGame);
+}
+
+// Allow ENTER to start
+if (dinoPlayerNameInput) {
+    dinoPlayerNameInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            startDinoGame();
+        }
+    });
+}
+
+
+/* =====================================================
+   GOOGLE FORM SCORE SUBMISSION
+===================================================== */
+
+const DINO_FORM_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLSde7V_k-3jT_FVm2gC3SYl51NntnSe0wo7EBxZf-FO7Kiqk3A/formResponse";
+
+async function submitDinoScore(playerName, playerScore) {
+    const formData = new FormData();
+
+    formData.append("entry.1489140571", playerName);
+    formData.append("entry.1007767509", String(playerScore));
+
+    try {
+        await fetch(DINO_FORM_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: formData
+        });
+
+        console.log(
+            "Dino score submitted:",
+            playerName,
+            playerScore
+        );
+    }
+    catch (error) {
+        console.error(
+            "Unable to submit Dino score:",
+            error
+        );
+    }
+}
+
+
+/* =====================================================
+   RECEIVE GAME OVER FROM IFRAME
+===================================================== */
+
+window.addEventListener("message", function(event) {
+
+    // Only accept messages from our Dino iframe
+    if (!dinoFrame || event.source !== dinoFrame.contentWindow) {
+        return;
+    }
+
+    if (!event.data || event.data.type !== "DINO_GAME_OVER") {
+        return;
+    }
+
+    const finalScore = Number(event.data.score);
+
+    if (Number.isNaN(finalScore)) {
+        return;
+    }
+
+    console.log(
+        "Dino Game Over:",
+        dinoPlayerName,
+        finalScore
+    );
+
+    // Save attempt to Google Form
+    if (dinoPlayerName) {
+        submitDinoScore(dinoPlayerName, finalScore);
+    }
+
+    // Refresh ranking after Google Sheet receives the result
+    setTimeout(loadDinoRanking, 2000);
+    setTimeout(loadDinoRanking, 5000);
+
+    // Show replay overlay
+    setTimeout(function() {
+
+        if (!dinoOverlay) {
+            return;
+        }
+
+        dinoOverlay.style.display = "flex";
+        dinoOverlay.style.pointerEvents = "auto";
+
+        if (dinoOverlayTitle) {
+            dinoOverlayTitle.innerHTML =
+                currentLanguage === "it"
+                    ? "🦖<br>Vuoi riprovare?"
+                    : "🦖<br>Play again?";
+        }
+
+        if (dinoLastScore) {
+            dinoLastScore.style.display = "block";
+            dinoLastScore.textContent =
+                (currentLanguage === "it" ? "Punteggio: " : "Score: ")
+                + finalScore;
+        }
+
+        if (dinoStartButton) {
+            dinoStartButton.textContent =
+                currentLanguage === "it"
+                    ? "GIOCA ANCORA"
+                    : "PLAY AGAIN";
+        }
+
+        // Keep previous name, but allow the user to change it
+        if (dinoPlayerNameInput) {
+            dinoPlayerNameInput.value = dinoPlayerName;
+        }
+
+    }, 1200);
+});
 
 
 /* =====================================================
@@ -603,7 +741,7 @@ const DINO_RANKING_URL =
 
 async function loadDinoRanking() {
 
-    console.log("loadDinoRanking avviata");
+    // console.log("loadDinoRanking avviata");
 
     const rankingContainer =
         document.getElementById("dino-ranking");
@@ -614,11 +752,18 @@ async function loadDinoRanking() {
 
     try {
 
-		console.log("Prima del fetch");
+		// console.log("Prima del fetch");
 
-		const response = await fetch(DINO_RANKING_URL);
+		// const response = await fetch(DINO_RANKING_URL);
+		const response = await fetch(
+			DINO_RANKING_URL + "&_=" + Date.now(),
+			{
+				cache: "no-store"
+			}
+		);
 
-		console.log("Fetch completato", response.status);
+
+		// console.log("Fetch completato", response.status);
 
         if (!response.ok) {
             throw new Error("Unable to load ranking");
@@ -626,7 +771,7 @@ async function loadDinoRanking() {
 
         const text = await response.text();
 
-		console.log("Testo ricevuto:", text);
+		// console.log("Testo ricevuto:", text);
 
         // Google gviz returns JSON wrapped in a function call
         const jsonText = text.substring(
@@ -636,8 +781,8 @@ async function loadDinoRanking() {
 
         const data = JSON.parse(jsonText);
 
-		console.log("JSON interpretato:", data);
-		console.log("Righe ricevute:", data.table.rows);
+		// console.log("JSON interpretato:", data);
+		// console.log("Righe ricevute:", data.table.rows);
 
         const scores = [];
 
@@ -764,7 +909,7 @@ function(){
     }
 
 	// Load ranking when website opens
-	console.log("Sto caricando la classifica");
+	// console.log("Sto caricando la classifica");
 	loadDinoRanking();
 
 });

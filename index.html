@@ -603,16 +603,37 @@ alt="Wedding">
     </iframe>
 
 
-    <div id="dino-start-overlay">
+	<div id="dino-start-overlay">
 
-        <div class="dino-message">
+		<div class="dino-message">
 
-            🦖<br>
-            Clicca per iniziare!
+			<div id="dino-overlay-title">
+				🦖<br>
+				Clicca per iniziare!
+			</div>
 
-        </div>
+			<input
+				id="dino-player-name"
+				type="text"
+				maxlength="30"
+				placeholder="Il tuo nome"
+				autocomplete="nickname"
+			>
 
-    </div>
+			<button
+				id="dino-start-button"
+				type="button">
+				GIOCA
+			</button>
+
+			<div
+				id="dino-last-score"
+				style="display:none;">
+			</div>
+
+		</div>
+
+	</div>
 
 
 </div>

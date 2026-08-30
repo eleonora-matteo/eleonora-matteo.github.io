@@ -133,33 +133,48 @@ function showGameOver() {
   ctx.fillText("GAME OVER", x, y);
 }
 
-function setupGameReset() {
-  if (!hasAddedEventListenersForRestart) {
-    hasAddedEventListenersForRestart = true;
+// function setupGameReset() {
+  // if (!hasAddedEventListenersForRestart) {
+    // hasAddedEventListenersForRestart = true;
 
-    setTimeout(() => {
+    // setTimeout(() => {
       
 	  
+		// // window.addEventListener("keyup", reset, { once: true });
+		// // window.addEventListener("touchstart", reset, { once: true });
 		// window.addEventListener("keyup", reset, { once: true });
 		// window.addEventListener("touchstart", reset, { once: true });
-		window.addEventListener("keyup", reset, { once: true });
-		window.addEventListener("touchstart", reset, { once: true });
 
-		// START GAME FROM PARENT WEBSITE OVERLAY
+		// // START GAME FROM PARENT WEBSITE OVERLAY
 
-		window.addEventListener(
-			"message",
-			function(event){
+		// window.addEventListener(
+			// "message",
+			// function(event){
 
-				if(event.data === "START_DINO"){
+				// if(event.data === "START_DINO"){
 
-				  reset();
-				}
-			}
-		);
-	}, 1000);
+				  // reset();
+				// }
+			// }
+		// );
+	// }, 1000);
 	
-  }
+  // }
+// }
+
+// function setupGameReset() {
+  // if (!hasAddedEventListenersForRestart) {
+    // hasAddedEventListenersForRestart = true;
+
+    // setTimeout(() => {
+      // window.addEventListener("keyup", reset, { once: true });
+      // window.addEventListener("touchstart", reset, { once: true });
+    // }, 1000);
+  // }
+// }
+
+function setupGameReset() {
+  hasAddedEventListenersForRestart = true;
 }
 
 function reset() {
@@ -171,6 +186,13 @@ function reset() {
   score.reset();
   gameSpeed = GAME_SPEED_START;
 }
+
+// START / RESTART GAME FROM PARENT WEBSITE
+window.addEventListener("message", function(event) {
+  if (event.data === "START_DINO") {
+    reset();
+  }
+});
 
 function showStartGameText() {
   const fontSize = 40 * scaleRatio;
@@ -209,12 +231,26 @@ function gameLoop(currentTime) {
     score.update(frameTimeDelta);
     updateGameSpeed(frameTimeDelta);
   }
+  
+  // if (!gameOver && cactiController.collideWith(player)) {
+    // gameOver = true;
+    // setupGameReset();
+    // score.setHighScore();
+  // }
 
-  if (!gameOver && cactiController.collideWith(player)) {
-    gameOver = true;
-    setupGameReset();
-    score.setHighScore();
-  }
+	if (!gameOver && cactiController.collideWith(player)) {
+		gameOver = true;
+		const finalScore = Math.floor(score.score);
+		window.parent.postMessage(
+			{
+				type: "DINO_GAME_OVER",
+				score: finalScore
+			},
+			"*"
+		);
+		setupGameReset();
+		score.setHighScore();
+	}  
 
   //Draw game objects
   ground.draw();
@@ -235,5 +271,5 @@ function gameLoop(currentTime) {
 
 requestAnimationFrame(gameLoop);
 
-window.addEventListener("keyup", reset, { once: true });
-window.addEventListener("touchstart", reset, { once: true });
+// window.addEventListener("keyup", reset, { once: true });
+// window.addEventListener("touchstart", reset, { once: true });
