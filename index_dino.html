@@ -28,9 +28,14 @@
         outline: none;
         -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
       }
-      canvas {
-        border: 0.1px solid grey;
-      }
+	  canvas {
+		  border: 0.1px solid grey;
+		  touch-action: none;
+		  -webkit-user-select: none;
+		  user-select: none;
+		  -webkit-tap-highlight-color: transparent;
+		}
+	  
       a {
         color: rgb(161, 157, 157);
       }
@@ -56,27 +61,33 @@
     <!-- </div> -->
     <canvas id="game"></canvas>
 	
-    <script>
-    window.addEventListener("message", function(event) {
+	<script>
+	window.addEventListener("message", function(event) {
 
-        if(event.data !== "START_DINO"){
-            return;
-        }
+		if(event.data !== "START_DINO"){
+			return;
+		}
 
-        window.dispatchEvent(
-            new Event("touchstart")
-        );
+		window.dispatchEvent(
+			new KeyboardEvent("keydown", {
+				code: "Space",
+				key: " "
+			})
+		);
 
-        setTimeout(function(){
+		setTimeout(function(){
 
-            window.dispatchEvent(
-                new Event("touchend")
-            );
+			window.dispatchEvent(
+				new KeyboardEvent("keyup", {
+					code: "Space",
+					key: " "
+				})
+			);
 
-        }, 120);
+		}, 120);
 
-    });
-    </script>	
+	});
+	</script>
 	
   </body>
 </html>

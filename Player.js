@@ -35,28 +35,74 @@ export default class Player {
     this.dinoRunImages.push(dinoRunImage1);
     this.dinoRunImages.push(dinoRunImage2);
 
-    //keyboard
-    window.removeEventListener("keydown", this.keydown);
-    window.removeEventListener("keyup", this.keyup);
+    // //keyboard
+    // window.removeEventListener("keydown", this.keydown);
+    // window.removeEventListener("keyup", this.keyup);
 
-    window.addEventListener("keydown", this.keydown);
-    window.addEventListener("keyup", this.keyup);
+    // window.addEventListener("keydown", this.keydown);
+    // window.addEventListener("keyup", this.keyup);
 
-    //touch
-    window.removeEventListener("touchstart", this.touchstart);
-    window.removeEventListener("touchend", this.touchend);
+    // //touch
+    // window.removeEventListener("touchstart", this.touchstart);
+    // window.removeEventListener("touchend", this.touchend);
 
-    window.addEventListener("touchstart", this.touchstart);
-    window.addEventListener("touchend", this.touchend);
+    // window.addEventListener("touchstart", this.touchstart);
+    // window.addEventListener("touchend", this.touchend);
+	
+	// KEYBOARD
+	window.removeEventListener("keydown", this.keydown);
+	window.removeEventListener("keyup", this.keyup);
+
+	window.addEventListener("keydown", this.keydown);
+	window.addEventListener("keyup", this.keyup);
+
+
+	// MOBILE / TOUCH / MOUSE
+	this.canvas.removeEventListener("pointerdown", this.pointerdown);
+	this.canvas.removeEventListener("pointerup", this.pointerup);
+	this.canvas.removeEventListener("pointercancel", this.pointerup);
+
+	this.canvas.addEventListener("pointerdown", this.pointerdown);
+	this.canvas.addEventListener("pointerup", this.pointerup);
+	this.canvas.addEventListener("pointercancel", this.pointerup);
+	
   }
 
-  touchstart = () => {
-    this.jumpPressed = true;
-  };
+  // touchstart = () => {
+    // this.jumpPressed = true;
+  // };
 
-  touchend = () => {
-    this.jumpPressed = false;
-  };
+  // touchend = () => {
+    // this.jumpPressed = false;
+  // };
+  
+	pointerdown = (event) => {
+
+	  event.preventDefault();
+
+	  this.jumpPressed = true;
+
+	  // Keep receiving the pointer even if the finger moves slightly
+	  if (this.canvas.setPointerCapture) {
+		this.canvas.setPointerCapture(event.pointerId);
+	  }
+	};
+
+
+	pointerup = (event) => {
+
+	  event.preventDefault();
+
+	  this.jumpPressed = false;
+
+	  if (
+		this.canvas.releasePointerCapture &&
+		this.canvas.hasPointerCapture &&
+		this.canvas.hasPointerCapture(event.pointerId)
+	  ) {
+		this.canvas.releasePointerCapture(event.pointerId);
+	  }
+	};  
 
   keydown = (event) => {
     if (event.code === "Space") {
