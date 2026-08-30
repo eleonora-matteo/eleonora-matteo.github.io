@@ -626,6 +626,8 @@ async function loadDinoRanking() {
 
         const text = await response.text();
 
+		console.log("Testo ricevuto:", text);
+
         // Google gviz returns JSON wrapped in a function call
         const jsonText = text.substring(
             text.indexOf("{"),
@@ -633,6 +635,9 @@ async function loadDinoRanking() {
         );
 
         const data = JSON.parse(jsonText);
+
+		console.log("JSON interpretato:", data);
+		console.log("Righe ricevute:", data.table.rows);
 
         const scores = [];
 
