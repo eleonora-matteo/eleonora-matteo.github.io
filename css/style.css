@@ -755,3 +755,58 @@ margin:20px 0 15px;
     }
 
 }
+
+
+/* =====================================================
+   DINO GAME - MOBILE FIX
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .game-container {
+        min-height: 250px;
+        height: 250px;
+        overflow: visible;
+    }
+
+    #dino-frame {
+        height: 200px;
+    }
+
+    #dino-start-overlay {
+        min-height: 250px;
+        height: 250px;
+        padding: 10px;
+        box-sizing: border-box;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dino-message {
+        width: 90%;
+        max-width: 300px;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    #dino-overlay-title {
+        margin-bottom: 8px;
+    }
+
+    #dino-player-name {
+        width: 90%;
+        max-width: 220px;
+        padding: 8px 12px;
+        margin: 8px auto;
+        box-sizing: border-box;
+    }
+
+    #dino-start-button {
+        margin: 8px auto 0;
+        padding: 8px 20px;
+    }
+
+    #dino-last-score {
+        margin-top: 7px;
+    }
+}
