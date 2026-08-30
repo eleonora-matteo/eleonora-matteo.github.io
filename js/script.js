@@ -555,72 +555,6 @@ updateCountdown,
 1000
 );
 
-
-
-// /* =====================================================
-   // DINO GAME START OVERLAY
-// ===================================================== */
-
-
-// const dinoOverlay = 
-// document.getElementById("dino-start-overlay");
-
-
-// const dinoFrame = 
-// document.getElementById("dino-frame");
-
-
-
-// if(dinoOverlay && dinoFrame){
-
-
-    // function startDinoGame(){
-
-
-        // // nasconde overlay
-
-        // dinoOverlay.style.display="none";
-
-
-        // // permette al canvas di ricevere touch
-
-        // dinoOverlay.style.pointerEvents="none";
-
-
-        // // manda comando dentro iframe
-
-        // dinoFrame.contentWindow.postMessage(
-            // "START_DINO",
-            // "*"
-        // );
-
-
-    // }
-
-
-
-    // // desktop
-
-    // dinoOverlay.addEventListener(
-        // "click",
-        // startDinoGame
-    // );
-
-
-
-    // // mobile
-
-    // dinoOverlay.addEventListener(
-        // "touchstart",
-        // startDinoGame,
-        // {
-            // passive:true
-        // }
-    // );
-
-
-// }
-
 /* =====================================================
    DINO GAME START OVERLAY
 ===================================================== */
@@ -655,6 +589,156 @@ if(dinoOverlay && dinoFrame){
         startDinoGame
     );
 }
+
+
+/* =====================================================
+   DINO TOP 5 RANKING
+===================================================== */
+
+// const DINO_RANKING_CSV =
+// "https://docs.google.com/spreadsheets/d/e/2PACX-1vRwen7zrouubMprOAUcrm-w2Vdu9pYEVgj4OueWpdpYmmW8_xWc0CArjhjsCvxiRXO0Aif_W-FevMpP/pub?gid=948850152&single=true&output=csv";
+
+const DINO_RANKING_URL =
+"https://docs.google.com/spreadsheets/d/1oSqPw6XsKwarTSjQ2BkQqpHE17BgkzYtOg3puY342LM/gviz/tq?tqx=out:json&gid=948850152";
+
+async function loadDinoRanking() {
+
+    const rankingContainer =
+        document.getElementById("dino-ranking");
+
+    if (!rankingContainer) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(DINO_RANKING_URL);
+
+        if (!response.ok) {
+            throw new Error("Unable to load ranking");
+        }
+
+        const text = await response.text();
+
+        // Google gviz returns JSON wrapped in a function call
+        const jsonText = text.substring(
+            text.indexOf("{"),
+            text.lastIndexOf("}") + 1
+        );
+
+        const data = JSON.parse(jsonText);
+
+        const scores = [];
+
+        data.table.rows.forEach(row => {
+
+            if (!row.c) {
+                return;
+            }
+
+            /*
+              Assuming:
+              column B = player name
+              column C = score
+            */
+
+            const playerName =
+                row.c[1] && row.c[1].v
+                    ? String(row.c[1].v).trim()
+                    : "";
+
+            const score =
+                row.c[2] && row.c[2].v !== null
+                    ? Number(row.c[2].v)
+                    : NaN;
+
+            if (!playerName || Number.isNaN(score)) {
+                return;
+            }
+
+            scores.push({
+                name: playerName,
+                score: score
+            });
+
+        });
+
+
+        scores.sort(
+            (a, b) => b.score - a.score
+        );
+
+
+        const topFive =
+            scores.slice(0, 5);
+
+
+        if (topFive.length === 0) {
+
+            rankingContainer.innerHTML =
+                '<div class="ranking-loading">Nessun punteggio ancora.</div>';
+
+            return;
+        }
+
+
+        rankingContainer.innerHTML =
+            topFive
+                .map((player, index) => {
+
+                    return `
+                        <div class="ranking-row">
+
+                            <div class="ranking-position">
+                                ${index + 1}
+                            </div>
+
+                            <div class="ranking-name">
+                                ${escapeRankingHTML(player.name)}
+                            </div>
+
+                            <div class="ranking-score">
+                                ${player.score}
+                            </div>
+
+                        </div>
+                    `;
+
+                })
+                .join("");
+
+    }
+    catch (error) {
+
+        console.error(
+            "Error loading Dino ranking:",
+            error
+        );
+
+        rankingContainer.innerHTML =
+            '<div class="ranking-loading">Classifica non disponibile.</div>';
+
+    }
+
+}
+
+
+function escapeRankingHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+// Load ranking when website opens
+loadDinoRanking();
+
+
 
 /* =====================================================
    INITIAL LOAD

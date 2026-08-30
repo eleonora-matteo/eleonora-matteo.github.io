@@ -671,3 +671,87 @@ margin:20px 0 15px;
 
 }
 
+
+/* =====================================================
+   DINO RANKING
+===================================================== */
+
+.ranking-section{
+    justify-content:center;
+}
+
+.ranking-content{
+    width:100%;
+    max-width:600px;
+    margin:auto;
+}
+
+.ranking-content h3{
+    text-align:center;
+    margin-bottom:5px;
+}
+
+.ranking-content p{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+#dino-ranking{
+    width:100%;
+    background:white;
+    border-radius:25px;
+    padding:15px 25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.ranking-row{
+    display:grid;
+    grid-template-columns:50px 1fr 100px;
+    align-items:center;
+
+    padding:15px 5px;
+
+    border-bottom:1px solid var(--beige);
+}
+
+.ranking-row:last-child{
+    border-bottom:none;
+}
+
+.ranking-position{
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem;
+    font-weight:600;
+    color:var(--coral);
+}
+
+.ranking-name{
+    font-weight:600;
+}
+
+.ranking-score{
+    text-align:right;
+    font-family:'Playfair Display',serif;
+    font-size:1.3rem;
+    color:var(--olive);
+}
+
+.ranking-loading{
+    text-align:center;
+    padding:20px;
+}
+
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+    #dino-ranking{
+        padding:10px 15px;
+    }
+
+    .ranking-row{
+        grid-template-columns:40px 1fr 75px;
+    }
+
+}
