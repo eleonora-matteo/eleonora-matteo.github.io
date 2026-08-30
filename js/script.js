@@ -603,6 +603,8 @@ const DINO_RANKING_URL =
 
 async function loadDinoRanking() {
 
+    console.log("loadDinoRanking avviata");
+
     const rankingContainer =
         document.getElementById("dino-ranking");
 
@@ -753,6 +755,7 @@ function(){
     }
 
 	// Load ranking when website opens
+	console.log("Sto caricando la classifica");
 	loadDinoRanking();
 
 });
