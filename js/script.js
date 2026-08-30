@@ -18,35 +18,17 @@ document.getElementById("language-switch");
 
 
 function changeLanguage(language) {
-
-
     const elements =
     document.querySelectorAll("[data-it]");
-
-
     elements.forEach(function(element){
-
-
         if(language === "it") {
-
-
             element.innerHTML =
             element.getAttribute("data-it");
-
-
         } else {
-
-
             element.innerHTML =
             element.getAttribute("data-en");
-
-
         }
-
-
     });
-
-
 }
 
 
@@ -142,14 +124,6 @@ document
 
 });
 
-
-
-
-
-
-
-
-
 /* =====================================================
    RSVP GOOGLE FORM
 ===================================================== */
@@ -171,13 +145,9 @@ document.getElementById("rsvp-summary");
 
 if(rsvpForm){
 
-
-
     rsvpForm.addEventListener(
     "submit",
     function(event){
-
-
 
         /*
         ==============================
@@ -185,118 +155,64 @@ if(rsvpForm){
         ==============================
         */
 
-
         const emailInput =
         rsvpForm.querySelector(
         'input[name="entry.983820881"]'
         );
 
-
-
         const email =
         emailInput.value.trim();
 
-
-
         if(!email.includes("@")){
-
-
             event.preventDefault();
-
-
-
             alert(
-
                 currentLanguage === "it"
-
                 ?
-
                 "Inserisci un indirizzo email valido."
-
                 :
-
                 "Please enter a valid email address."
-
             );
 
-
-
             emailInput.focus();
-
-
             return false;
-
-
         }
-
-
-
-
-
-
 
         /*
         ==============================
         SAVE USER INPUT BEFORE RESET
         ==============================
         */
-
-
         const formData = {
 
 
             nome:
-
             rsvpForm.querySelector(
             'input[name="entry.117939672"]'
             ).value,
 
-
-
             cognome:
-
             rsvpForm.querySelector(
             'input[name="entry.1658100118"]'
             ).value,
 
-
-
             email:
-
             email,
 
-
-
             allergie:
-
             rsvpForm.querySelector(
             'textarea[name="entry.791230968"]'
             ).value,
 
-
-
             bambini:
-
             rsvpForm.querySelector(
             'input[name="entry.1921284157"]'
             ).value,
 
-
-
             canzone:
-
             rsvpForm.querySelector(
             'input[name="entry.1662388832"]'
             ).value
-
-
         };
-
-
-
-
-
-
 
 
         /*
@@ -639,6 +555,8 @@ updateCountdown,
 1000
 );
 
+
+
 // /* =====================================================
    // DINO GAME START OVERLAY
 // ===================================================== */
@@ -656,117 +574,86 @@ updateCountdown,
 // if(dinoOverlay && dinoFrame){
 
 
+    // function startDinoGame(){
+
+
+        // // nasconde overlay
+
+        // dinoOverlay.style.display="none";
+
+
+        // // permette al canvas di ricevere touch
+
+        // dinoOverlay.style.pointerEvents="none";
+
+
+        // // manda comando dentro iframe
+
+        // dinoFrame.contentWindow.postMessage(
+            // "START_DINO",
+            // "*"
+        // );
+
+
+    // }
+
+
+
+    // // desktop
+
     // dinoOverlay.addEventListener(
         // "click",
-        // function(){
-
-
-            // // nasconde il messaggio iniziale
-
-            // dinoOverlay.style.display="none";
-
-
-            // // recupera finestra iframe
-
-            // const gameWindow = 
-            // dinoFrame.contentWindow;
+        // startDinoGame
+    // );
 
 
 
-            // // manda evento touch al gioco
+    // // mobile
 
-            // gameWindow.dispatchEvent(
-                // new Event("touchstart")
-            // );
-
-
-            // // manda anche spazio tastiera
-
-            // gameWindow.dispatchEvent(
-                // new KeyboardEvent(
-                    // "keyup",
-                    // {
-                        // code:"Space",
-                        // key:" "
-                    // }
-                // )
-            // );
-
-
-            // // focus iframe
-
-            // gameWindow.focus();
-
-
+    // dinoOverlay.addEventListener(
+        // "touchstart",
+        // startDinoGame,
+        // {
+            // passive:true
         // }
     // );
 
 
 // }
 
-
 /* =====================================================
    DINO GAME START OVERLAY
 ===================================================== */
 
-
-const dinoOverlay = 
+const dinoOverlay =
 document.getElementById("dino-start-overlay");
 
-
-const dinoFrame = 
+const dinoFrame =
 document.getElementById("dino-frame");
-
-
 
 if(dinoOverlay && dinoFrame){
 
+    function startDinoGame(event){
 
-    function startDinoGame(){
+        if(event){
+            event.preventDefault();
+        }
 
-
-        // nasconde overlay
-
-        dinoOverlay.style.display="none";
-
-
-        // permette al canvas di ricevere touch
-
-        dinoOverlay.style.pointerEvents="none";
-
-
-        // manda comando dentro iframe
+        dinoOverlay.style.display = "none";
+        dinoOverlay.style.pointerEvents = "none";
 
         dinoFrame.contentWindow.postMessage(
             "START_DINO",
             "*"
         );
 
-
+        dinoFrame.focus();
     }
 
-
-
-    // desktop
-
     dinoOverlay.addEventListener(
-        "click",
+        "pointerdown",
         startDinoGame
     );
-
-
-
-    // mobile
-
-    dinoOverlay.addEventListener(
-        "touchstart",
-        startDinoGame,
-        {
-            passive:true
-        }
-    );
-
-
 }
 
 /* =====================================================

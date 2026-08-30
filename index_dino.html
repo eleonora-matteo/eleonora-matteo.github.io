@@ -55,5 +55,28 @@
       <!-- > -->
     <!-- </div> -->
     <canvas id="game"></canvas>
+	
+    <script>
+    window.addEventListener("message", function(event) {
+
+        if(event.data !== "START_DINO"){
+            return;
+        }
+
+        window.dispatchEvent(
+            new Event("touchstart")
+        );
+
+        setTimeout(function(){
+
+            window.dispatchEvent(
+                new Event("touchend")
+            );
+
+        }, 120);
+
+    });
+    </script>	
+	
   </body>
 </html>
