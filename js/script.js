@@ -63,10 +63,154 @@ if(languageButton){
 
 
 
+/* =====================================================
+   HERO 4 - CARD CAROUSEL
+===================================================== */
+
+document.querySelectorAll(".hero4").forEach(function(carousel){
+
+    const track =
+        carousel.querySelector(".hero4-track");
+
+    const previousButton =
+        carousel.querySelector(".hero4-prev");
+
+    const nextButton =
+        carousel.querySelector(".hero4-next");
 
 
+    if(!track){
+        return;
+    }
 
 
+    function getScrollAmount(){
+
+        const firstCard =
+            track.querySelector(".card");
+
+        if(!firstCard){
+            return track.clientWidth;
+        }
+
+        const gap =
+            parseFloat(
+                window.getComputedStyle(track).gap
+            ) || 0;
+
+        return firstCard.offsetWidth + gap;
+    }
+
+
+    if(nextButton){
+
+        nextButton.addEventListener(
+            "click",
+            function(){
+
+                track.scrollBy({
+                    left:getScrollAmount(),
+                    behavior:"smooth"
+                });
+
+            }
+        );
+
+    }
+
+
+    if(previousButton){
+
+        previousButton.addEventListener(
+            "click",
+            function(){
+
+                track.scrollBy({
+                    left:-getScrollAmount(),
+                    behavior:"smooth"
+                });
+
+            }
+        );
+
+    }
+
+});
+
+
+/* =====================================================
+   HERO 5 - STORY CAROUSEL
+===================================================== */
+
+document.querySelectorAll(".hero5").forEach(function(carousel){
+
+    const track =
+        carousel.querySelector(".hero5-track");
+
+    const previousButton =
+        carousel.querySelector(".hero5-prev");
+
+    const nextButton =
+        carousel.querySelector(".hero5-next");
+
+
+    if(!track){
+        return;
+    }
+
+
+    function getScrollAmount(){
+
+        const firstItem =
+            track.querySelector(".timeline-item");
+
+        if(!firstItem){
+            return track.clientWidth;
+        }
+
+        const gap =
+            parseFloat(
+                window.getComputedStyle(track).gap
+            ) || 0;
+
+        return firstItem.offsetWidth + gap;
+    }
+
+
+    if(nextButton){
+
+        nextButton.addEventListener(
+            "click",
+            function(){
+
+                track.scrollBy({
+                    left:getScrollAmount(),
+                    behavior:"smooth"
+                });
+
+            }
+        );
+
+    }
+
+
+    if(previousButton){
+
+        previousButton.addEventListener(
+            "click",
+            function(){
+
+                track.scrollBy({
+                    left:-getScrollAmount(),
+                    behavior:"smooth"
+                });
+
+            }
+        );
+
+    }
+
+});
 
 /* =====================================================
    MOBILE MENU
