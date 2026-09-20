@@ -93,16 +93,21 @@ document.querySelectorAll(".hero4").forEach(function (carousel) {
         return dot;
     });
 
+    function cardCenter(card) {
+        return card.getBoundingClientRect().left -
+            track.getBoundingClientRect().left +
+            track.scrollLeft +
+            card.offsetWidth / 2;
+    }
+
     function currentIndex() {
-        const position = track.scrollLeft;
+        const viewportCenter = track.scrollLeft + track.clientWidth / 2;
 
         return cards.reduce(function (best, card, index) {
-            const distance =
-                Math.abs(card.offsetLeft - cards[0].offsetLeft - position);
-            const bestDistance =
-                Math.abs(cards[best].offsetLeft - cards[0].offsetLeft - position);
-
-            return distance < bestDistance ? index : best;
+            return Math.abs(cardCenter(card) - viewportCenter) <
+                Math.abs(cardCenter(cards[best]) - viewportCenter)
+                ? index
+                : best;
         }, 0);
     }
 
@@ -125,7 +130,7 @@ document.querySelectorAll(".hero4").forEach(function (carousel) {
         const target = Math.max(0, Math.min(cards.length - 1, index));
 
         track.scrollTo({
-            left: cards[target].offsetLeft - cards[0].offsetLeft,
+            left: cardCenter(cards[target]) - track.clientWidth / 2,
             behavior: "smooth"
         });
     }

@@ -29,6 +29,11 @@ html{
 scroll-behavior:smooth;
 }
 
+/* Keep section headings visible below the fixed 80px navbar. */
+section[id]{
+scroll-margin-top:80px;
+}
+
 body{
 font-family:'Montserrat',sans-serif;
 background:var(--cream);
@@ -337,17 +342,14 @@ font-size:.75rem;
     overflow:hidden;
 }
 
-.hero4-track{
-    display:flex;
-    gap:30px;
-
-    overflow-x:auto;
-    scroll-behavior:smooth;
-    scroll-snap-type:x mandatory;
-
-    padding:20px 5px 10px;
-
-    scrollbar-width:none;
+.hero4-track {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    padding: 20px max(5px, calc((100% - 700px) / 2)) 10px;
+    scrollbar-width: none;
 }
 
 .hero4-track::-webkit-scrollbar{
@@ -355,16 +357,12 @@ font-size:.75rem;
 }
 
 
-/* LARGE CARDS */
-
-.hero4 .card{
-    flex:0 0 min(700px, calc(100% - 10px));
-    max-width:700px;
-    min-height:0;
-
-    margin:0;
-
-    scroll-snap-align:start;
+.hero4 .card {
+    flex: 0 0 min(700px, 100%);
+    max-width: 700px;
+    min-height: 0;
+    margin: 0;
+    scroll-snap-align: center;
 }
 
 
@@ -444,6 +442,7 @@ font-size:.75rem;
 
 .hero6{
     width:100%;
+    max-width:700px;
     margin:40px auto;
 
     display:flex;
