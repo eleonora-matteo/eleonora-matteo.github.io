@@ -59,16 +59,18 @@ position:fixed;
 width:100%;
 top:0;
 z-index:1000;
+background:rgba(247,245,239,.95);
+backdrop-filter:blur(10px);
 }
 
 .navbar{
 height:80px;
+max-width:1024px;
+margin:0 auto;
 display:flex;
 align-items:center;
 justify-content:space-between;
-padding:0 5%;
-background:rgba(247,245,239,.95);
-backdrop-filter:blur(10px);
+padding:0 22px;
 }
 
 .logo{
@@ -324,74 +326,64 @@ font-size:.75rem;
 }
 }
 
-/* INFO UTILI CAROUSEL — same card as Podere Calvanella */
-.hero4{width:100%;max-width:700px;margin:40px auto;}
-.hero4-viewport{width:100%;overflow:hidden;}
+/* =====================================================
+   HERO 4 - CARD CAROUSEL
+===================================================== */
+
+.hero4{
+    width:100%;
+    margin:40px auto;
+}
+
+.hero4-viewport{
+    width:100%;
+    overflow:hidden;
+}
+
 .hero4-track{
     display:flex;
-    gap:20px;
+    gap:30px;
+
     overflow-x:auto;
     scroll-behavior:smooth;
     scroll-snap-type:x mandatory;
+
+    padding:20px 5px 10px;
+
     scrollbar-width:none;
 }
-.hero4-track::-webkit-scrollbar{display:none;}
+
+.hero4-track::-webkit-scrollbar{
+    display:none;
+}
+
+
+/* LARGE CARDS */
+
 .hero4 .card{
-    flex:0 0 100%;
-    width:100%;
-    max-width:700px;
-    min-height:0;
+    flex:0 0 430px;
+
+    max-width:430px;
+    min-height:520px;
+
     margin:0;
+
     scroll-snap-align:start;
 }
+
+
+/* IMAGE INSIDE CARD */
+
 .hero4 .card img{
-    width:auto;
-    height:auto;
-    object-fit:initial;
+    width:100%;
+    height:260px;
+    object-fit:cover;
+
     border-radius:20px;
+
     margin-bottom:20px;
 }
-.hero4-controls{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:18px;
-    margin:22px auto 0;
-}
-.hero4-arrow{
-    display:grid;
-    place-items:center;
-    width:44px;
-    height:44px;
-    padding:0 0 4px;
-    border:1px solid var(--olive);
-    border-radius:50%;
-    background:var(--cream);
-    color:var(--olive);
-    font-family:Arial,sans-serif;
-    font-size:30px;
-    font-weight:400;
-    line-height:1;
-    cursor:pointer;
-}
-.hero4-arrow:hover{background:var(--olive);color:white;}
-.hero4-arrow:disabled{opacity:.35;cursor:default;}
-.hero4-arrow:disabled:hover{background:var(--cream);color:var(--olive);}
-.hero4-dots{display:flex;align-items:center;justify-content:center;gap:10px;}
-.hero4-dot{
-    width:10px;
-    height:10px;
-    padding:0;
-    border:0;
-    border-radius:50%;
-    background:var(--brown);
-    cursor:pointer;
-}
-.hero4-dot[aria-current="true"]{background:var(--olive);transform:scale(1.35);}
-.hero4-arrow:focus-visible,.hero4-dot:focus-visible{
-    outline:2px solid var(--coral);
-    outline-offset:3px;
-}
+
 /* =====================================================
    HERO 6 - VERTICAL WEDDING SCHEDULE
 ===================================================== */
