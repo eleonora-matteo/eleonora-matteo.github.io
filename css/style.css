@@ -1447,3 +1447,15 @@ margin:20px 0 15px;
         box-shadow: none;
     }
 }
+
+/* Adjustment 2 lines title */
+
+.hero3 h1 br {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .hero3 h1 br {
+        display: block;
+    }
+}
