@@ -759,7 +759,7 @@ font-size:.75rem;
 
 @media (max-width: 600px) {
     .hero4 .card {
-        flex: 0 0 calc(100% - 10px);
+        flex: 0 0 100%;
         max-width: none;
         min-height: 0;
     }
