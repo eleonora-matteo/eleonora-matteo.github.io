@@ -810,11 +810,17 @@ font-size:3rem;
 margin-bottom:30px;
 }
 
-.subtitle{
-text-align:center;
-margin:40px 0 25px;
-}
 
+/* .subtitle{ */
+/* text-align:center; */
+/* margin:40px 0 25px; */
+/* } */
+
+.subtitle {
+  text-align: center;
+  margin: 40px 0 25px;
+
+}
 
 /* TIMELINE */
 
