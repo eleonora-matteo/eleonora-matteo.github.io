@@ -19,6 +19,9 @@ const GROUND_WIDTH = 2400;
 const GROUND_HEIGHT = 24;
 const GROUND_AND_CACTUS_SPEED = 0.5;
 
+const backgroundImage = new Image();
+backgroundImage.src = "images/game_background.png";
+
 // const CACTI_CONFIG = [
   // { width: 48 / 1.5, height: 100 / 1.5, image: "images/cactus_1.png" },
   // { width: 98 / 1.5, height: 100 / 1.5, image: "images/cactus_2.png" },
@@ -207,9 +210,18 @@ function updateGameSpeed(frameTimeDelta) {
   gameSpeed += frameTimeDelta * GAME_SPEED_INCREMENT;
 }
 
+// function clearScreen() {
+  // ctx.fillStyle = "white";
+  // ctx.fillRect(0, 0, canvas.width, canvas.height);
+// }
+
 function clearScreen() {
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (backgroundImage.complete && backgroundImage.naturalWidth > 0) {
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+  }
 }
 
 function gameLoop(currentTime) {
