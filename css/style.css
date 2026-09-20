@@ -903,13 +903,14 @@ font-size:.9rem;
 
 /* WISHING */
 
-.iban-box{
-max-width:600px;
-margin:40px auto;
-padding:40px;
-background:var(--beige);
-border-radius:30px;
-text-align:center;
+.iban-box {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 40px;
+    background: var(--beige);
+    border-radius: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
 }
 
 .iban-box h3{
