@@ -363,6 +363,7 @@ font-size:.75rem;
     min-height: 0;
     margin: 0;
     scroll-snap-align: center;
+	box-shadow: none;
 }
 
 
