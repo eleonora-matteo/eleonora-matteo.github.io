@@ -168,23 +168,19 @@ padding:0 0 30px;
 /* HERO 3 - REFERENCE LAYOUT */
 
 .hero3{
-min-height:100vh;
+min-height:0;
 display:flex;
 align-items:center;
 justify-content:center;
-padding:130px 5% 70px;
+padding:110px 5% 42px;
 background-color:var(--cream);
-background-image:url("../assets/images/cover_2.png");
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
 text-align:center;
 }
 
 .hero3-content{
 width:100%;
 max-width:1100px;
-margin:auto;
+margin:0 auto;
 display:flex;
 flex-direction:column;
 align-items:center;
@@ -257,7 +253,7 @@ font-size:1rem;
 @media(max-width:900px){
 .hero3{
 min-height:auto;
-padding:125px 20px 50px;
+padding:105px 20px 36px;
 }
 
 .hero3 h1{
@@ -289,7 +285,7 @@ padding:15px 12px;
 
 @media(max-width:480px){
 .hero3{
-padding:110px 16px 38px;
+padding:100px 16px 30px;
 }
 
 .hero3 h1{
