@@ -64,7 +64,8 @@ position:fixed;
 width:100%;
 top:0;
 z-index:1000;
-background:rgba(247,245,239,.95);
+background:rgba(63,70,53,.95);
+color:var(--cream);
 backdrop-filter:blur(10px);
 }
 
@@ -81,7 +82,7 @@ padding:0 22px;
 .logo{
 font-family:'Playfair Display';
 font-size:1.4rem;
-color:var(--dark-green);
+color:var(--cream);
 }
 
 .nav-links{
@@ -102,8 +103,8 @@ color:var(--coral);
 .language-switch,
 .menu-toggle{
 border:none;
-background:var(--dark-green);
-color:white;
+background:var(--cream);
+color:var(--dark-green);
 padding:10px 15px;
 border-radius:20px;
 cursor:pointer;
@@ -1062,7 +1063,7 @@ position:absolute;
 top:80px;
 left:0;
 width:100%;
-background:var(--cream);
+background:var(--dark-green);
 flex-direction:column;
 align-items:center;
 padding:30px;
@@ -1458,4 +1459,13 @@ margin:20px 0 15px;
     .hero3 h1 br {
         display: block;
     }
+}
+
+/* Adjustment heart */
+
+.heart {
+    font-family: Arial, sans-serif;
+    font-size: .9rem;
+    line-height: 1;
+    color: var(--coral);
 }
