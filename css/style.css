@@ -1442,4 +1442,8 @@ margin:20px 0 15px;
     .hero4 .card {
         height: 520px;
     }
+
+    .hero4 .card {
+        box-shadow: none;
+    }
 }
