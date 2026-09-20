@@ -811,6 +811,12 @@ margin-bottom:30px;
 }
 
 
+.section-subtitle {
+    font-size: 2rem;
+    color: var(--olive);
+    margin: 40px 0 25px;
+}
+
 /* .subtitle{ */
 /* text-align:center; */
 /* margin:40px 0 25px; */
