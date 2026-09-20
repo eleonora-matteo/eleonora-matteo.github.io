@@ -764,6 +764,24 @@ font-size:.75rem;
 
 /* SECTIONS */
 
+.section-banner {
+    width: min(850px, calc(100% - 40px));
+    margin: 16px auto;
+}
+
+.section-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 600px) {
+    .section-banner {
+        width: min(400px, calc(100% - 32px));
+        margin: 12px auto;
+    }
+}
+
 .section{
     width:100%;
     max-width:var(--content-width);
