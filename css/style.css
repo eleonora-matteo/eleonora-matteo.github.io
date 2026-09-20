@@ -362,10 +362,9 @@ font-size:.75rem;
 /* LARGE CARDS */
 
 .hero4 .card{
-    flex:0 0 430px;
-
-    max-width:430px;
-    min-height:520px;
+    flex:0 0 min(700px, calc(100% - 10px));
+    max-width:700px;
+    min-height:0;
 
     margin:0;
 
@@ -377,8 +376,7 @@ font-size:.75rem;
 
 .hero4 .card img{
     width:100%;
-    height:260px;
-    object-fit:cover;
+    height:auto;
 
     border-radius:20px;
 
@@ -435,7 +433,7 @@ font-size:.75rem;
 
 .hero4-track::after {
     content: "";
-    flex: 0 0 max(0px, calc(100% - 435px));
+    flex: 0 0 max(0px, calc(100% - 705px));
 }
 
 @media (max-width: 600px) {
@@ -1416,5 +1414,35 @@ margin:20px 0 15px;
 
     #dino-last-score {
         margin-top: 7px;
+    }
+}
+/* Podere and Info utili use the same tile geometry. */
+#program > .card,
+.hero4 .card {
+    width: min(700px, 100%);
+    height: 640px;
+    display: flex;
+    flex-direction: column;
+}
+
+#program > .card img,
+.hero4 .card img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+#program > .card .button,
+.hero4 .card .button {
+    align-self: flex-start;
+    margin-top: auto;
+}
+
+@media (max-width: 600px) {
+    #program > .card,
+    .hero4 .card {
+        height: 520px;
     }
 }
