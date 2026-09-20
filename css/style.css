@@ -329,6 +329,19 @@ font-size:.75rem;
 }
 }
 
+.hero3-picture {
+    display: block;
+    width: 100%;
+    max-width: var(--hero3-title-width, 100%);
+    margin: 28px auto 0;
+}
+
+.hero3-picture img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 /* =====================================================
    HERO 4 - CARD CAROUSEL
 ===================================================== */

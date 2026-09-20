@@ -1100,24 +1100,59 @@ function escapeRankingHTML(text) {
 
 
 
+
 /* =====================================================
    INITIAL LOAD
 ===================================================== */
 
 
-document.addEventListener(
-"DOMContentLoaded",
-function(){
+// document.addEventListener(
+// "DOMContentLoaded",
+// function(){
 
 
+    // changeLanguage("it");
+
+    // if(successMessage){
+        // successMessage.style.display="none";
+    // }
+
+	// // Load ranking when website opens
+	// // console.log("Sto caricando la classifica");
+	// loadDinoRanking();
+
+// });
+
+
+document.addEventListener("DOMContentLoaded", function () {
     changeLanguage("it");
 
-    if(successMessage){
-        successMessage.style.display="none";
+    if (successMessage) {
+        successMessage.style.display = "none";
     }
 
-	// Load ranking when website opens
-	// console.log("Sto caricando la classifica");
-	loadDinoRanking();
+const heroTitle = document.querySelector(".hero3 h1");
+const welcomeBox = document.querySelector(".hero3-welcome");
+const heroPicture = document.querySelector(".hero3-picture");
 
+if (heroTitle && welcomeBox && heroPicture) {
+    function matchPictureWidth() {
+        const reference = window.innerWidth <= 600
+            ? welcomeBox
+            : heroTitle;
+
+        heroPicture.style.setProperty(
+            "--hero3-title-width",
+            `${reference.getBoundingClientRect().width}px`
+        );
+    }
+
+    new ResizeObserver(matchPictureWidth).observe(heroTitle);
+    new ResizeObserver(matchPictureWidth).observe(welcomeBox);
+    window.addEventListener("resize", matchPictureWidth);
+    document.fonts.ready.then(matchPictureWidth);
+    matchPictureWidth();
+}
+
+    loadDinoRanking();
 });
