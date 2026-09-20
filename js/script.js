@@ -67,74 +67,81 @@ if(languageButton){
    HERO 4 - CARD CAROUSEL
 ===================================================== */
 
-document.querySelectorAll(".hero4").forEach(function(carousel){
+document.querySelectorAll(".hero4").forEach(function (carousel) {
+    const track = carousel.querySelector(".hero4-track");
+    const cards = Array.from(track.querySelectorAll(".card"));
+    const dotsContainer = carousel.querySelector(".hero4-dots");
+    const previousButton = carousel.querySelector(".hero4-prev");
+    const nextButton = carousel.querySelector(".hero4-next");
 
-    const track =
-        carousel.querySelector(".hero4-track");
+    if (!cards.length || !dotsContainer) return;
 
-    const previousButton =
-        carousel.querySelector(".hero4-prev");
-
-    const nextButton =
-        carousel.querySelector(".hero4-next");
-
-
-    if(!track){
-        return;
-    }
-
-
-    function getScrollAmount(){
-
-        const firstCard =
-            track.querySelector(".card");
-
-        if(!firstCard){
-            return track.clientWidth;
-        }
-
-        const gap =
-            parseFloat(
-                window.getComputedStyle(track).gap
-            ) || 0;
-
-        return firstCard.offsetWidth + gap;
-    }
-
-
-    if(nextButton){
-
-        nextButton.addEventListener(
-            "click",
-            function(){
-
-                track.scrollBy({
-                    left:getScrollAmount(),
-                    behavior:"smooth"
-                });
-
-            }
+    const dots = cards.map(function (card, index) {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "hero4-dot";
+        dot.setAttribute(
+            "aria-label",
+            "Slide " + (index + 1) + " of " + cards.length
         );
 
+        dot.addEventListener("click", function () {
+            goTo(index);
+        });
+
+        dotsContainer.appendChild(dot);
+        return dot;
+    });
+
+    function currentIndex() {
+        const position = track.scrollLeft;
+
+        return cards.reduce(function (best, card, index) {
+            const distance =
+                Math.abs(card.offsetLeft - cards[0].offsetLeft - position);
+            const bestDistance =
+                Math.abs(cards[best].offsetLeft - cards[0].offsetLeft - position);
+
+            return distance < bestDistance ? index : best;
+        }, 0);
     }
 
+    function updateControls() {
+        const index = currentIndex();
 
-    if(previousButton){
-
-        previousButton.addEventListener(
-            "click",
-            function(){
-
-                track.scrollBy({
-                    left:-getScrollAmount(),
-                    behavior:"smooth"
-                });
-
+        dots.forEach(function (dot, i) {
+            if (i === index) {
+                dot.setAttribute("aria-current", "true");
+            } else {
+                dot.removeAttribute("aria-current");
             }
-        );
+        });
 
+        previousButton.disabled = index === 0;
+        nextButton.disabled = index === cards.length - 1;
     }
 
+    function goTo(index) {
+        const target = Math.max(0, Math.min(cards.length - 1, index));
+
+        track.scrollTo({
+            left: cards[target].offsetLeft - cards[0].offsetLeft,
+            behavior: "smooth"
+        });
+    }
+
+    previousButton.addEventListener("click", function () {
+        goTo(currentIndex() - 1);
+    });
+
+    nextButton.addEventListener("click", function () {
+        goTo(currentIndex() + 1);
+    });
+
+    track.addEventListener("scroll", updateControls, { passive: true });
+    window.addEventListener("resize", updateControls);
+
+    updateControls();
 });
 
 
