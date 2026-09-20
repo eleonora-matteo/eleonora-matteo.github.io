@@ -4,16 +4,19 @@
 ===================================================== */
 
 :root{
---dark-green:#3F4635;
---sage-green:#8DBF9A;
---light-green:#DCE6C8;
---yellow:#F2C94C;
---orange:#E67E22;
---coral:#E9967A;
---beige:#F3DDD0;
---brown:#B7A88A;
---olive:#667C3E;
---cream:#F7F5EF;
+    --dark-green:#3F4635;
+    --sage-green:#8DBF9A;
+    --light-green:#DCE6C8;
+    --yellow:#F2C94C;
+    --orange:#E67E22;
+    --coral:#E9967A;
+    --beige:#F3DDD0;
+    --brown:#B7A88A;
+    --olive:#667C3E;
+    --cream:#F7F5EF;
+
+    /* GLOBAL WEBSITE WIDTH */
+    --content-width:1100px;
 }
 
 *{
@@ -327,7 +330,6 @@ font-size:.75rem;
 
 .hero4{
     width:100%;
-    max-width:1400px;
     margin:40px auto;
 }
 
@@ -380,92 +382,147 @@ font-size:.75rem;
     margin-bottom:20px;
 }
 
-
 /* =====================================================
-   ARROWS BELOW CAROUSEL
+   HERO 6 - VERTICAL WEDDING SCHEDULE
 ===================================================== */
 
-.hero4-controls{
-    display:flex;
-    justify-content:flex-end;
-    gap:12px;
+.hero6{
+    width:100%;
+    margin:40px auto;
 
-    margin-top:20px;
-    padding-right:5px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
 }
 
 
-.hero4-arrow{
-    position:static;
+/* SINGLE EVENT TILE */
 
-    width:50px;
-    height:50px;
+.hero6-tile{
+    width:100%;
 
-    border:none;
-    border-radius:50%;
-
-    background:var(--dark-green);
-    color:white;
-
-    font-size:2rem;
-    line-height:1;
-
-    cursor:pointer;
+    min-height:150px;
 
     display:flex;
     align-items:center;
-    justify-content:center;
 
-    box-shadow:0 5px 15px rgba(0,0,0,.15);
+    gap:30px;
 
-    transition:.2s ease;
+    padding:25px 30px;
+
+    background:#F7F5EF;
+
+    border:1.5px solid #D8CDB9;
+    border-radius:18px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,.05);
 }
 
 
-.hero4-arrow:hover{
-    background:var(--olive);
-    transform:translateY(-2px);
+/* LEFT IMAGE */
+
+.hero6-icon{
+    width:110px;
+    height:110px;
+
+    flex:0 0 110px;
+
+    object-fit:contain;
+
+    margin:0;
 }
 
 
-/* TABLET */
+/* RIGHT CONTENT */
 
-@media(max-width:900px){
+.hero6-content{
+    flex:1;
 
-    .hero4 .card{
-        flex:0 0 75%;
-        max-width:75%;
-        min-height:auto;
-    }
+    display:flex;
+    flex-direction:column;
 
+    align-items:flex-start;
+
+    text-align:left;
 }
 
 
-/* MOBILE */
+/* TIME */
+
+.hero6-time{
+    font-size:.9rem;
+    font-weight:500;
+
+    color:var(--coral);
+
+    margin-bottom:5px;
+}
+
+
+/* TITLE */
+
+.hero6-tile h3{
+    font-size:1.35rem;
+    line-height:1.2;
+
+    color:var(--dark-green);
+
+    margin:0 0 7px;
+
+    text-align:left;
+}
+
+
+/* DESCRIPTION */
+
+.hero6-tile p{
+    font-size:.85rem;
+    line-height:1.5;
+
+    color:var(--dark-green);
+
+    margin:0;
+
+    text-align:left;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
 
 @media(max-width:600px){
 
-    .hero4{
-        margin:20px auto;
+    .hero6{
+        margin:25px auto;
+        gap:14px;
     }
 
-    .hero4-track{
-        gap:15px;
-        padding:10px 5px;
+    .hero6-tile{
+        min-height:120px;
+
+        gap:18px;
+
+        padding:18px;
     }
 
-    .hero4 .card{
-        flex:0 0 88%;
-        max-width:88%;
-        min-height:auto;
+    .hero6-icon{
+        width:80px;
+        height:80px;
+
+        flex:0 0 80px;
     }
 
-    .hero4 .card img{
-        height:auto;
+    .hero6-time{
+        font-size:.78rem;
     }
 
-    .hero4-controls{
-        display:none;
+    .hero6-tile h3{
+        font-size:1.05rem;
+    }
+
+    .hero6-tile p{
+        font-size:.75rem;
     }
 
 }
@@ -477,7 +534,6 @@ font-size:.75rem;
 
 .hero5{
     width:100%;
-    max-width:1200px;
     margin:40px auto;
 }
 
@@ -645,8 +701,12 @@ font-size:.75rem;
 /* SECTIONS */
 
 .section{
-padding:40px 8%;
-background:var(--cream);
+    width:100%;
+    max-width:var(--content-width);
+    margin:0 auto;
+
+    padding:40px 20px;
+    background:var(--cream);
 }
 
 .section h2{
