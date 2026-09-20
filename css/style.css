@@ -1500,3 +1500,12 @@ margin:20px 0 15px;
     line-height: 1;
     color: var(--coral);
 }
+
+/* Adjustment picture after title */
+
+
+@media (max-width: 600px) {
+    .hero3 .hero3-picture {
+        margin-top: 28px;
+    }
+}
