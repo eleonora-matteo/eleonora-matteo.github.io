@@ -1521,3 +1521,152 @@ margin:20px 0 15px;
         margin-top: 28px;
     }
 }
+
+
+
+
+
+/* Alternating text-and-picture sections */
+.split-section {
+    width: 100%;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "text image";
+    align-items: center;
+    gap: 40px;
+}
+
+/* Picture left, text right */
+.split-section--text-right {
+    grid-template-areas: "image text";
+}
+
+.split-section-text {
+    grid-area: text;
+    min-width: 0;
+    text-align: left;
+}
+
+.split-section-text h3 {
+    margin: 0 0 20px;
+}
+
+.split-section-text p {
+    margin: 0;
+}
+
+.split-section-image {
+    grid-area: image;
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+/* Mobile: text above picture for both types */
+@media (max-width: 600px) {
+    .split-section {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "text"
+            "image";
+        gap: 24px;
+        margin: 30px auto;
+    }
+
+    .split-section-text {
+        text-align: center;
+    }
+}
+
+.split-section--text-left {
+    grid-template-columns: minmax(0, 1fr) 370px;
+}
+
+.split-section--text-right {
+    grid-template-columns: 370px minmax(0, 1fr);
+}
+
+.split-section-image {
+    width: 100%;
+    height: 420px;
+    object-fit: contain;
+    border-radius: 20px;
+}
+
+/* Come hero5, sotto 900px l’altezza diventa automatica */
+@media (max-width: 900px) {
+    .split-section {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "text"
+            "image";
+    }
+
+    .split-section-image {
+        height: auto;
+    }
+}
+
+.split-section-image {
+    width: 100%;
+    max-width: 370px;
+    height: 420px;
+    object-fit: contain;
+    justify-self: center;
+}
+
+@media (max-width: 900px) {
+    .split-section-image {
+        height: auto;
+        aspect-ratio: 370 / 420;
+    }
+}
+
+.split-section--text-left {
+    grid-template-columns: minmax(0, 1fr) 420px;
+}
+
+.split-section--text-right {
+    grid-template-columns: 420px minmax(0, 1fr);
+}
+
+.split-section-image {
+    width: 100%;
+    max-width: 420px;
+    height: 420px;
+    aspect-ratio: auto;
+    object-fit: contain;
+    justify-self: center;
+}
+
+@media (max-width: 900px) {
+    .split-section {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "text"
+            "image";
+    }
+
+    .split-section-image {
+        height: auto;
+    }
+}
+
+.split-section-text h3 {
+    font-size: 2rem;
+    color: var(--olive);
+}
+
+
+.page-end-link {
+    display: flex;
+    justify-content: center;
+    padding: 20px 20px 40px;
+}
+
+.page-end-link .button {
+    padding: 8px 18px;
+    font-size: 0.85rem;
+}
