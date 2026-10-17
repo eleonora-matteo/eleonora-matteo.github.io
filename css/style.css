@@ -1702,8 +1702,8 @@ margin:20px 0 15px;
 }
 
 .page-end-link .button {
-    padding: 8px 18px;
-    font-size: 0.85rem;
+    padding: 12px 25px;
+    font-size: 1rem;
 }
 
 .photo-link {
@@ -1811,4 +1811,8 @@ margin:20px 0 15px;
         justify-self: end;
         display: block;
     }
+}
+
+#program > .card > .button {
+    align-self: center;
 }
