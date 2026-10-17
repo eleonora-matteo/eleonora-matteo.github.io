@@ -8,59 +8,53 @@
    LANGUAGE SWITCH ITA / ENG
 ===================================================== */
 
-
 let currentLanguage = "it";
 
+try {
+    const savedLanguage = localStorage.getItem("wedding-language");
 
-const languageButton =
-document.getElementById("language-switch");
-
-
+    if (savedLanguage === "it" || savedLanguage === "en") {
+        currentLanguage = savedLanguage;
+    }
+} catch (error) {
+    // Mantiene l'italiano se lo storage non è disponibile.
+}
 
 function changeLanguage(language) {
-    const elements =
-    document.querySelectorAll("[data-it]");
-    elements.forEach(function(element){
-        if(language === "it") {
-            element.innerHTML =
-            element.getAttribute("data-it");
-        } else {
-            element.innerHTML =
-            element.getAttribute("data-en");
-        }
-    });
-}
+    currentLanguage = language === "en" ? "en" : "it";
 
+    document.documentElement.lang = currentLanguage;
 
-
-
-if(languageButton){
-
-
-    languageButton.addEventListener(
-    "click",
-    function(){
-
-
-        if(currentLanguage === "it"){
-
-            currentLanguage = "en";
-
-        } else {
-
-            currentLanguage = "it";
-
-        }
-
-
-        changeLanguage(currentLanguage);
-
-
+    document.querySelectorAll("[data-it][data-en]").forEach(function (element) {
+        element.innerHTML = element.getAttribute(
+            "data-" + currentLanguage
+        );
     });
 
-
+    try {
+        localStorage.setItem("wedding-language", currentLanguage);
+    } catch (error) {
+        // Il cambio lingua funziona anche senza storage.
+    }
 }
 
+function initializeLanguage() {
+    changeLanguage(currentLanguage);
+
+    const languageButton = document.getElementById("language-switch");
+
+    if (languageButton) {
+        languageButton.addEventListener("click", function () {
+            changeLanguage(currentLanguage === "it" ? "en" : "it");
+        });
+    }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeLanguage);
+} else {
+    initializeLanguage();
+}
 
 
 /* =====================================================
@@ -1262,7 +1256,6 @@ document.querySelectorAll("img.split-section-image, .hero3-picture img").forEach
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    changeLanguage("it");
 
     if (successMessage) {
         successMessage.style.display = "none";
