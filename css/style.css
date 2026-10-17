@@ -871,6 +871,13 @@ border-radius:25px;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
+.card .location-address {
+    margin: 4px 0 16px;
+    font-size: 0.8rem;
+    font-style: italic;
+    line-height: 1.5;
+}
+
 .card img{
 border-radius:20px;
 margin-bottom:20px;
@@ -1457,13 +1464,36 @@ margin:20px 0 15px;
         margin-top: 7px;
     }
 }
-/* Podere and Info utili use the same tile geometry. */
+/* Tile widths and column layout. */
 #program > .card,
 .hero4 .card {
     width: min(700px, 100%);
     height: 640px;
     display: flex;
     flex-direction: column;
+}
+
+/* Podere grows to contain its photos, description and button. */
+#program > .card {
+    height: auto;
+    min-height: 640px;
+}
+
+#program > .card > * {
+    flex-shrink: 0;
+}
+
+#program > .card > p:last-of-type {
+    margin-bottom: 24px;
+}
+
+#program > .card > .button {
+    position: static;
+    top: auto;
+    align-self: flex-start;
+    margin-top: auto;
+    max-width: 100%;
+    white-space: normal;
 }
 
 #program > .card img,
@@ -1482,7 +1512,11 @@ margin:20px 0 15px;
 }
 
 @media (max-width: 600px) {
-    #program > .card,
+    #program > .card {
+        height: auto;
+        min-height: 520px;
+    }
+
     .hero4 .card {
         height: 520px;
     }
@@ -1491,6 +1525,7 @@ margin:20px 0 15px;
         box-shadow: none;
     }
 }
+
 
 /* Adjustment 2 lines title */
 
@@ -1701,5 +1736,79 @@ margin:20px 0 15px;
 @media (max-width: 600px) {
     .photo-link img {
         height: 200px;
+    }
+}
+/* Photo carousel inside the Podere tile; reuses hero4 controls. */
+.photo-carousel {
+    width: 100%;
+    min-width: 0;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+}
+.photo-carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    border-radius: 20px;
+}
+.photo-carousel-track::-webkit-scrollbar { display: none; }
+#program > .card .photo-carousel-slide {
+    display: block;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin: 0;
+    border-radius: 0;
+    scroll-snap-align: start;
+}
+.photo-carousel .hero4-controls { margin-top: 12px; }
+.photo-carousel .hero4-dots { flex-wrap: wrap; justify-content: center; }
+.photo-carousel-track:focus-visible,
+.photo-carousel button:focus-visible {
+    outline: 2px solid var(--dark-green);
+    outline-offset: 3px;
+}
+
+.split-section-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.split-section-actions .button {
+    margin-top: 0;
+}
+
+@media (max-width: 900px) {
+    .navbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .navbar .logo {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+        min-width: 0;
+        font-size: 1rem;
+        line-height: 1.2;
+    }
+
+    .navbar .language-switch {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: center;
+        white-space: nowrap;
+    }
+
+    .navbar .menu-toggle {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+        display: block;
     }
 }

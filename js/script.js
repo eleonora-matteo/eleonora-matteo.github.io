@@ -1099,7 +1099,144 @@ function escapeRankingHTML(text) {
 }
 
 
+/* Carosello foto dentro la tile Podere Calvanella */
+document.querySelectorAll(".photo-carousel").forEach(function (carousel) {
+    const track = carousel.querySelector(".photo-carousel-track");
+    const slides = Array.from(
+        track.querySelectorAll(".photo-carousel-slide")
+    );
 
+    const previous = carousel.querySelector(".hero4-prev");
+    const next = carousel.querySelector(".hero4-next");
+    const dotsContainer = carousel.querySelector(".hero4-dots");
+
+    if (!slides.length) return;
+
+    let selected = 0;
+
+    const dots = slides.map(function (slide, index) {
+        const dot = document.createElement("button");
+
+        dot.type = "button";
+        dot.className = "hero4-dot";
+        dot.setAttribute(
+            "aria-label",
+            "Photo " + (index + 1) + " / " + slides.length
+        );
+
+        dot.addEventListener("click", function () {
+            goTo(index);
+        });
+
+        dotsContainer.appendChild(dot);
+        return dot;
+    });
+
+    function updateControls() {
+        dots.forEach(function (dot, index) {
+            if (index === selected) {
+                dot.setAttribute("aria-current", "true");
+            } else {
+                dot.removeAttribute("aria-current");
+            }
+        });
+
+        previous.disabled = selected === 0;
+        next.disabled = selected === slides.length - 1;
+    }
+
+    function goTo(index) {
+        selected = Math.max(
+            0,
+            Math.min(slides.length - 1, index)
+        );
+
+        track.scrollTo({
+            left: selected * track.clientWidth,
+            behavior: window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            ).matches ? "auto" : "smooth"
+        });
+
+        updateControls();
+    }
+
+    previous.addEventListener("click", function () {
+        goTo(selected - 1);
+    });
+
+    next.addEventListener("click", function () {
+        goTo(selected + 1);
+    });
+
+    track.addEventListener("keydown", function (event) {
+        if (
+            event.key === "ArrowLeft" ||
+            event.key === "ArrowRight"
+        ) {
+            event.preventDefault();
+
+            goTo(
+                selected +
+                (event.key === "ArrowRight" ? 1 : -1)
+            );
+        }
+    });
+
+    track.addEventListener("scroll", function () {
+        if (!track.clientWidth) return;
+
+        selected = Math.max(
+            0,
+            Math.min(
+                slides.length - 1,
+                Math.round(track.scrollLeft / track.clientWidth)
+            )
+        );
+
+        updateControls();
+    }, { passive: true });
+
+    new ResizeObserver(function () {
+        track.scrollTo({
+            left: selected * track.clientWidth,
+            behavior: "instant"
+        });
+    }).observe(track);
+
+    updateControls();
+});
+
+/* Arrotonda le foto senza cambiarne le dimensioni */
+document.querySelectorAll("img.split-section-image, .hero3-picture img").forEach(function (img) {
+    function roundPhoto() {
+        if (!img.naturalWidth || !img.naturalHeight) return;
+
+        const width = img.clientWidth;
+        const height = img.clientHeight;
+
+        if (!width || !height) return;
+
+        const scale = Math.min(
+            width / img.naturalWidth,
+            height / img.naturalHeight
+        );
+
+        const horizontalSpace =
+            Math.max(0, (width - img.naturalWidth * scale) / 2);
+
+        const verticalSpace =
+            Math.max(0, (height - img.naturalHeight * scale) / 2);
+
+        img.style.clipPath =
+            `inset(${verticalSpace}px ${horizontalSpace}px round 20px)`;
+    }
+
+    img.addEventListener("load", roundPhoto);
+    new ResizeObserver(roundPhoto).observe(img);
+
+    roundPhoto();
+});
 
 /* =====================================================
    INITIAL LOAD
