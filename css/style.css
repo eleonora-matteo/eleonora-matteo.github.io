@@ -1816,3 +1816,91 @@ margin:20px 0 15px;
 #program > .card > .button {
     align-self: center;
 }
+
+
+/* RSVP: campi uniformi e disposizione verticale */
+
+#rsvp-form {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+
+    text-align: left;
+}
+
+/* Anche i contenitori interni seguono una colonna verticale. */
+
+#rsvp-form [data-rsvp-suggest],
+#rsvp-form fieldset {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+#rsvp-form fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Conserva la comparsa progressiva dei campi. */
+
+#rsvp-form [hidden] {
+    display: none !important;
+}
+
+#rsvp-form label {
+    display: block;
+    margin: 0;
+    color: var(--dark-green);
+}
+
+/* Stesse dimensioni per nome, cognome e tutti gli altri campi. */
+
+#rsvp-form input,
+#rsvp-form textarea {
+    display: block;
+    box-sizing: border-box;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+
+    height: 54px;
+    min-height: 54px;
+
+    margin: 0;
+    padding: 15px;
+
+    border: 1px solid var(--brown);
+    border-radius: 15px;
+
+    background: white;
+    color: var(--dark-green);
+
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    line-height: 22px;
+}
+
+#rsvp-form textarea {
+    resize: none;
+    overflow-y: auto;
+}
+
+#rsvp-form input:focus-visible,
+#rsvp-form textarea:focus-visible {
+    outline: 2px solid var(--olive);
+    outline-offset: 2px;
+}
