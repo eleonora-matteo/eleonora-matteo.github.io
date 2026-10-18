@@ -501,95 +501,31 @@ Partecipanti
 
 
 
-<form
-
-id="rsvp-form"
-
-class="rsvp-form"
-
-action="https://docs.google.com/forms/d/e/1FAIpQLSdDSfc0gA2O6rSJ-x0rNb5uKGlyakX91HrUwyPWRupvN8yq4w/formResponse"
-
-method="POST"
-
-target="hidden_iframe">
-
-
-
-
-
-<label data-it="Nome *" data-en="First name *">
-Nome *
-</label>
-
-
-<input
-type="text"
-name="entry.117939672"
-required>
-
-
-<label data-it="Cognome *" data-en="Last name *">
-Cognome *
-</label>
-
-
-<input
-type="text"
-name="entry.1658100118"
-required>
-
-
-<label data-it="Email *" data-en="Email *">
-Email *
-</label>
-
-
-<input
-type="email"
-name="entry.983820881"
-required>
-
-
-<label data-it="Allergie & Intolleranze *" data-en="Allergies & Dietary restrictions *">
-Allergie & Intolleranze *
-</label>
-
-
-<textarea
-name="entry.791230968"
-required></textarea>
-
-
-<label data-it="Numero bambini / Età" data-en="Number of children / Ages">
-Numero bambini / Età
-</label>
-
-<input
-type="text"
-name="entry.1921284157">
-
-
-<label data-it="Suggerimento canzone DJ" data-en="DJ song suggestion">
-Suggerimento canzone DJ
-</label>
-
-
-<input
-type="text"
-name="entry.1662388832">
-
-
-<button data-it="Invia" data-en="Submit" type="submit">
-MANDA
-</button>
-
+<form id="rsvp-form" class="rsvp-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdDSfc0gA2O6rSJ-x0rNb5uKGlyakX91HrUwyPWRupvN8yq4w/formResponse" method="POST" onsubmit="event.preventDefault()">
+<div data-rsvp-suggest>
+<label for="rsvp-name" data-it="Nome *" data-en="First name *">Nome *</label>
+<input id="rsvp-name" type="text" name="entry.117939672" autocomplete="off" aria-controls="rsvp-names" aria-expanded="false" aria-describedby="rsvp-status" required>
+<div id="rsvp-names" hidden></div>
+</div>
+<fieldset id="rsvp-surname-stage" hidden disabled style="border:0;padding:0;margin:0;min-width:0;" data-rsvp-suggest>
+<label for="rsvp-surname" data-it="Cognome *" data-en="Last name *">Cognome *</label>
+<input id="rsvp-surname" type="text" name="entry.1658100118" autocomplete="off" aria-controls="rsvp-surnames" aria-expanded="false" required>
+<div id="rsvp-surnames" hidden></div>
+</fieldset>
+<fieldset id="rsvp-details" hidden disabled style="border:0;padding:0;margin:0;min-width:0;">
+<label for="rsvp-983820881" data-it="Email *" data-en="Email *">Email *</label>
+<input id="rsvp-983820881" type="email" name="entry.983820881" required>
+<label for="rsvp-791230968" data-it="Allergie &amp; Intolleranze *" data-en="Allergies &amp; Dietary restrictions *">Allergie &amp; Intolleranze *</label>
+<textarea id="rsvp-791230968" name="entry.791230968" required></textarea>
+<label for="rsvp-1921284157" data-it="Numero bambini / Età" data-en="Number of children / Ages">Numero bambini / Età</label>
+<input id="rsvp-1921284157" type="text" name="entry.1921284157">
+<label for="rsvp-1662388832" data-it="Suggerimento canzone DJ" data-en="DJ song suggestion">Suggerimento canzone DJ</label>
+<input id="rsvp-1662388832" type="text" name="entry.1662388832">
+<button data-it="Invia" data-en="Submit" type="submit">Invia</button>
+</fieldset>
+<p id="rsvp-status" role="status" aria-live="polite"></p>
+<noscript>Per compilare il form RSVP è necessario JavaScript. / JavaScript is required to complete the RSVP form.</noscript>
 </form>
-
-
-<iframe
-name="hidden_iframe"
-style="display:none">
-</iframe>
 
 
 

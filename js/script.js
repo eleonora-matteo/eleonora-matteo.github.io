@@ -159,11 +159,9 @@ document.querySelectorAll(".hero5").forEach(function(carousel){
     const nextButton =
         carousel.querySelector(".hero5-next");
 
-
     if(!track){
         return;
     }
-
 
     function getScrollAmount(){
 
@@ -182,7 +180,6 @@ document.querySelectorAll(".hero5").forEach(function(carousel){
         return firstItem.offsetWidth + gap;
     }
 
-
     if(nextButton){
 
         nextButton.addEventListener(
@@ -198,7 +195,6 @@ document.querySelectorAll(".hero5").forEach(function(carousel){
         );
 
     }
-
 
     if(previousButton){
 
@@ -223,284 +219,625 @@ document.querySelectorAll(".hero5").forEach(function(carousel){
    MOBILE MENU
 ===================================================== */
 
-
 const menuButton =
 document.getElementById("menu-toggle");
-
 
 const navLinks =
 document.getElementById("nav-links");
 
-
-
 if(menuButton){
-
 
     menuButton.addEventListener(
     "click",
     function(){
 
-
         navLinks.classList.toggle("active");
-
 
     });
 
-
 }
-
-
-
-
 
 document
 .querySelectorAll(".nav-links a")
 .forEach(function(item){
 
-
     item.addEventListener(
     "click",
     function(){
 
-
         if(navLinks){
-
             navLinks.classList.remove("active");
-
         }
-
 
     });
 
-
 });
+
 
 /* =====================================================
    RSVP GOOGLE FORM
 ===================================================== */
 
-
-const rsvpForm =
-document.getElementById("rsvp-form");
-
-
+// Utilizzata anche nella sezione INITIAL LOAD.
 const successMessage =
-document.getElementById("rsvp-success");
+    document.getElementById("rsvp-success");
 
+// Inserire l'URL reale del deployment Apps Script.
+const RSVP_API_URL = "https://script.google.com/macros/s/AKfycbwKhX-iI-P1U-Sog-TKjptLEYJWXKBD3aURyGg_zSFl8EGce0Nc1piWO2K1iuajfoGI/exec";
 
-const summary =
-document.getElementById("rsvp-summary");
+(() => {
+    const form = document.getElementById("rsvp-form");
+    if (!form) return;
 
+    const name = form.elements["entry.117939672"];
+    const surname = form.elements["entry.1658100118"];
 
+    const surnameStage =
+        document.getElementById("rsvp-surname-stage");
 
+    const details =
+        document.getElementById("rsvp-details");
 
-if(rsvpForm){
+    const status =
+        document.getElementById("rsvp-status");
 
-    rsvpForm.addEventListener(
-    "submit",
-    function(event){
+    const button =
+        form.querySelector('[type="submit"]');
 
-        /*
-        ==============================
-        EMAIL VALIDATION
-        ==============================
-        */
+    let selectedName = "";
+    let selectedSurname = "";
+    let generation = 0;
+    let busy = false;
+    let sent = false;
+    let timer;
+    let surnameItems = [];
+    let submittedData;
 
-        const emailInput =
-        rsvpForm.querySelector(
-        'input[name="entry.983820881"]'
+    const tr = (it, en) =>
+        currentLanguage === "en" ? en : it;
+
+    const norm = value =>
+        value
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase();
+
+    const escapeHTML = value =>
+        String(value).replace(
+            /[&<>"']/g,
+            character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[character])
         );
 
-        const email =
-        emailInput.value.trim();
+    /* ---------- Messaggi bilingui ---------- */
 
-        if(!email.includes("@")){
-            event.preventDefault();
-            alert(
-                currentLanguage === "it"
-                ?
-                "Inserisci un indirizzo email valido."
-                :
-                "Please enter a valid email address."
-            );
+    function say(it, en) {
+        status.dataset.it = it || "";
+        status.dataset.en = en || "";
+        status.textContent = it ? tr(it, en) : "";
+    }
 
-            emailInput.focus();
-            return false;
+    /* ---------- Richieste ad Apps Script ---------- */
+
+    async function api(action, params = {}) {
+        const validURL =
+            /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/;
+
+        if (!validURL.test(RSVP_API_URL)) {
+            throw new Error("configuration");
         }
 
-        /*
-        ==============================
-        SAVE USER INPUT BEFORE RESET
-        ==============================
-        */
-        const formData = {
+        const url = new URL(RSVP_API_URL);
 
+        url.search = new URLSearchParams({
+            action,
+            ...params,
+            _: String(Date.now())
+        });
 
-            nome:
-            rsvpForm.querySelector(
-            'input[name="entry.117939672"]'
-            ).value,
+        const controller = new AbortController();
 
-            cognome:
-            rsvpForm.querySelector(
-            'input[name="entry.1658100118"]'
-            ).value,
+        const timeout = setTimeout(
+            () => controller.abort(),
+            20000
+        );
 
-            email:
-            email,
+        try {
+            const response = await fetch(url, {
+                signal: controller.signal,
+                cache: "no-store",
+                credentials: "omit"
+            });
 
-            allergie:
-            rsvpForm.querySelector(
-            'textarea[name="entry.791230968"]'
-            ).value,
-
-            bambini:
-            rsvpForm.querySelector(
-            'input[name="entry.1921284157"]'
-            ).value,
-
-            canzone:
-            rsvpForm.querySelector(
-            'input[name="entry.1662388832"]'
-            ).value
-        };
-
-
-        /*
-        ==============================
-        SHOW CONFIRMATION
-        ==============================
-        */
-
-
-        setTimeout(function(){
-
-
-
-            // nasconde il form
-
-            rsvpForm.style.display = "none";
-
-
-
-
-            // crea riepilogo
-
-
-            if(summary){
-
-
-                summary.innerHTML = `
-
-
-                <div class="summary-box">
-
-
-                <p>
-                <strong>
-                ${currentLanguage === "it" ? "Nome" : "First name"}:
-                </strong>
-                ${formData.nome}
-                </p>
-
-
-
-                <p>
-                <strong>
-                ${currentLanguage === "it" ? "Cognome" : "Last name"}:
-                </strong>
-                ${formData.cognome}
-                </p>
-
-
-
-                <p>
-                <strong>
-                Email:
-                </strong>
-                ${formData.email}
-                </p>
-
-
-
-                <p>
-                <strong>
-                ${currentLanguage === "it" ? "Allergie & Intolleranze" : "Allergies & Intolerances"}:
-                </strong>
-                ${formData.allergie}
-                </p>
-
-
-
-                <p>
-                <strong>
-                ${currentLanguage === "it" ? "Bambini" : "Children"}:
-                </strong>
-                ${formData.bambini || 
-                (currentLanguage === "it" ? "Nessuno" : "None")}
-                </p>
-
-
-
-                <p>
-                <strong>
-                ${currentLanguage === "it" ? "Canzone DJ" : "DJ Song"}:
-                </strong>
-                ${formData.canzone || 
-                (currentLanguage === "it" ? "Nessuna" : "None")}
-                </p>
-
-
-                </div>
-
-
-                `;
-
-
+            if (!response.ok) {
+                throw new Error("network");
             }
 
+            const result = await response.json();
 
+            if (result.error) {
+                throw new Error(result.error);
+            }
 
+            return result;
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
 
+    /* ---------- Elenchi suggerimenti ---------- */
 
+    function clearList(input) {
+        const list = document.getElementById(
+            input.getAttribute("aria-controls")
+        );
 
+        list.replaceChildren();
+        list.hidden = true;
 
-            if(successMessage){
+        input.setAttribute("aria-expanded", "false");
+    }
 
+    function showList(input, items, choose) {
+        const list = document.getElementById(
+            input.getAttribute("aria-controls")
+        );
 
-                successMessage.style.display="block";
+        clearList(input);
 
+        items.forEach(item => {
+            const option = document.createElement("button");
 
-                successMessage.scrollIntoView({
+            option.type = "button";
+            option.disabled = !!item.responded;
 
-                    behavior:"smooth"
+            option.style.cssText =
+                "display:block;" +
+                "width:100%;" +
+                "text-align:left;" +
+                "margin:3px 0;";
 
+            option.textContent =
+                item.text +
+                (
+                    item.responded
+                        ? tr(
+                            " — già confermato",
+                            " — already confirmed"
+                        )
+                        : ""
+                );
+
+            if (item.responded) {
+                option.dataset.it =
+                    escapeHTML(item.text) + " — già confermato";
+
+                option.dataset.en =
+                    escapeHTML(item.text) + " — already confirmed";
+            }
+
+            option.addEventListener("click", () => {
+                choose(item);
+                clearList(input);
+            });
+
+            list.append(option);
+        });
+
+        list.hidden = !items.length;
+
+        input.setAttribute(
+            "aria-expanded",
+            String(!!items.length)
+        );
+    }
+
+    /* ---------- Campi progressivi ---------- */
+
+    function resetDetails() {
+        selectedSurname = "";
+
+        details.hidden = true;
+        details.disabled = true;
+
+        details
+            .querySelectorAll("input, textarea")
+            .forEach(element => {
+                element.value = "";
+            });
+    }
+
+    function selectSurname(item) {
+        if (item.responded) return;
+
+        selectedSurname = item.text;
+        surname.value = item.text;
+
+        details.hidden = false;
+        details.disabled = false;
+
+        say();
+    }
+
+    function displaySurnames() {
+        const query = norm(surname.value);
+
+        const filtered = surnameItems.filter(item =>
+            norm(item.text).includes(query)
+        );
+
+        showList(surname, filtered, selectSurname);
+    }
+
+    async function selectName(item) {
+        const version = ++generation;
+
+        selectedName = item.text;
+        name.value = item.text;
+
+        surname.value = "";
+
+        surnameStage.hidden = false;
+        surnameStage.disabled = false;
+        surname.disabled = true;
+
+        resetDetails();
+
+        say(
+            "Caricamento cognomi…",
+            "Loading surnames…"
+        );
+
+        try {
+            const result = await api("surnames", {
+                name: selectedName
+            });
+
+            if (version !== generation) return;
+
+            surnameItems = result.surnames.map(guest => ({
+                text: guest.cognome,
+                responded: guest.responded
+            }));
+
+            surname.disabled = false;
+
+            say();
+
+            if (
+                surnameItems.length === 1 &&
+                !surnameItems[0].responded
+            ) {
+                selectSurname(surnameItems[0]);
+            } else {
+                surname.focus();
+                displaySurnames();
+            }
+        } catch (_) {
+            if (version !== generation) return;
+
+            say(
+                "Impossibile caricare i cognomi. " +
+                "Seleziona nuovamente il nome per riprovare.",
+
+                "Unable to load surnames. " +
+                "Select your first name again to retry."
+            );
+        }
+    }
+
+    /* ---------- Ricerca nome ---------- */
+
+    name.addEventListener("input", () => {
+        const version = ++generation;
+
+        clearTimeout(timer);
+
+        clearList(name);
+        clearList(surname);
+
+        selectedName = "";
+        surname.value = "";
+        surnameItems = [];
+
+        surnameStage.hidden = true;
+        surnameStage.disabled = true;
+
+        resetDetails();
+        say();
+
+        if (!norm(name.value)) return;
+
+        timer = setTimeout(async () => {
+            say("Ricerca…", "Searching…");
+
+            try {
+                const result = await api("names", {
+                    q: name.value
                 });
 
+                if (version !== generation) return;
 
+                const items = result.names.map(text => ({
+                    text
+                }));
+
+                showList(name, items, selectName);
+
+                if (result.names.length) {
+                    say();
+                } else {
+                    say(
+                        "Nessun nome trovato. " +
+                        "Contatta gli sposi se hai bisogno di aiuto.",
+
+                        "No first name found. " +
+                        "Contact the couple if you need help."
+                    );
+                }
+            } catch (_) {
+                if (version !== generation) return;
+
+                say(
+                    "Lista invitati non disponibile. " +
+                    "Riprova tra poco.",
+
+                    "Guest list unavailable. " +
+                    "Please try again shortly."
+                );
             }
-
-
-
-
-
-        },1500);
-
-
-
-
+        }, 250);
     });
 
+    /* ---------- Ricerca cognome ---------- */
 
+    surname.addEventListener(
+        "focus",
+        displaySurnames
+    );
 
-}
+    surname.addEventListener("input", () => {
+        resetDetails();
+        displaySurnames();
+    });
 
+    /* ---------- Tastiera e chiusura suggerimenti ---------- */
 
+    [name, surname].forEach(input => {
+        input.addEventListener("keydown", event => {
+            const list = document.getElementById(
+                input.getAttribute("aria-controls")
+            );
 
+            if (event.key === "Escape") {
+                clearList(input);
+            }
 
+            if (event.key === "ArrowDown") {
+                event.preventDefault();
 
+                list
+                    .querySelector("button:not(:disabled)")
+                    ?.focus();
+            }
 
+            if (
+                event.key === "Enter" &&
+                !list.hidden
+            ) {
+                event.preventDefault();
+            }
+        });
+    });
 
+    document.addEventListener("click", event => {
+        if (
+            !event.target.closest("[data-rsvp-suggest]")
+        ) {
+            clearList(name);
+            clearList(surname);
+        }
+    });
+
+    /* ---------- Riscaldamento Apps Script ---------- */
+
+    name.addEventListener(
+        "focus",
+        () => {
+            api("ping").catch(() => {});
+        },
+        { once: true }
+    );
+
+    /* ---------- Riepilogo con escape HTML ---------- */
+
+    function renderSummary() {
+        if (!submittedData) return;
+
+        const labels = [
+            ["Nome", "First name"],
+            ["Cognome", "Last name"],
+            ["Email", "Email"],
+            [
+                "Allergie & Intolleranze",
+                "Allergies & Dietary restrictions"
+            ],
+            ["Bambini", "Children"],
+            ["Canzone DJ", "DJ song suggestion"]
+        ];
+
+        const summary =
+            document.getElementById("rsvp-summary");
+
+        if (!summary) return;
+
+        summary.innerHTML =
+            '<div class="summary-box">' +
+            labels.map((label, index) => {
+                const value =
+                    submittedData[index] ||
+                    tr("Nessuno/a", "None");
+
+                return (
+                    "<p><strong>" +
+                    escapeHTML(tr(...label)) +
+                    ":</strong> " +
+                    escapeHTML(value) +
+                    "</p>"
+                );
+            }).join("") +
+            "</div>";
+    }
+
+    // Aggiorna il riepilogo anche dopo un cambio lingua.
+    new MutationObserver(() => {
+        renderSummary();
+    }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["lang"]
+    });
+
+    /* ---------- Controllo finale e invio ---------- */
+
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        if (busy || sent) return;
+
+        if (
+            !selectedName ||
+            !selectedSurname ||
+            name.value !== selectedName ||
+            surname.value !== selectedSurname ||
+            !form.reportValidity()
+        ) {
+            say(
+                "Seleziona nome e cognome dagli elenchi.",
+                "Select your first and last names from the suggestions."
+            );
+
+            return;
+        }
+
+        busy = true;
+        button.disabled = true;
+
+        // Acquisire i valori prima di disabilitare i campi.
+        const data = new FormData(form);
+
+        const snapshot = [
+            name.value,
+            surname.value
+        ];
+
+        name.disabled = true;
+        surname.disabled = true;
+        details.disabled = true;
+
+        say(
+            "Controllo e invio in corso…",
+            "Checking and sending…"
+        );
+
+        let posting = false;
+
+        try {
+            const check = await api("check", {
+                name: snapshot[0],
+                surname: snapshot[1]
+            });
+
+            if (!check.invited || check.responded) {
+                say(
+                    check.responded
+                        ? "Hai già confermato la tua presenza."
+                        : "Nome e cognome non presenti nella lista invitati.",
+
+                    check.responded
+                        ? "Your RSVP has already been recorded."
+                        : "First and last names are not on the guest list."
+                );
+
+                return;
+            }
+
+            posting = true;
+
+            await fetch(form.action, {
+                method: "POST",
+                mode: "no-cors",
+                body: new URLSearchParams(data),
+                credentials: "omit"
+            });
+
+            sent = true;
+
+            submittedData = [
+                "117939672",
+                "1658100118",
+                "983820881",
+                "791230968",
+                "1921284157",
+                "1662388832"
+            ].map(id => data.get("entry." + id));
+
+            renderSummary();
+
+            form.style.display = "none";
+
+            const success =
+                document.getElementById("rsvp-success");
+
+            if (success) {
+                success.style.display = "block";
+
+                success.scrollIntoView({
+                    behavior: "smooth"
+                });
+            }
+        } catch (_) {
+            /*
+             * Un errore dopo l'inizio del POST non dimostra
+             * che Google non abbia ricevuto la risposta.
+             */
+            if (posting) {
+                sent = true;
+
+                say(
+                    "Esito dell’invio non verificabile. " +
+                    "Contatta gli sposi prima di riprovare.",
+
+                    "Delivery could not be verified. " +
+                    "Contact the couple before trying again."
+                );
+            } else {
+                say(
+                    "Controllo non disponibile: " +
+                    "nessun invio effettuato. Riprova tra poco.",
+
+                    "Verification unavailable: " +
+                    "nothing was sent. Please try again shortly."
+                );
+            }
+        } finally {
+            busy = false;
+
+            if (!sent) {
+                name.disabled = false;
+                surname.disabled = false;
+                details.disabled = false;
+                button.disabled = false;
+            }
+        }
+    });
+})();
 
 
 /* =====================================================
@@ -535,43 +872,30 @@ element.classList.add("visible");
    SMOOTH SCROLL
 ===================================================== */
 
-
 document
 .querySelectorAll('a[href^="#"]')
 .forEach(function(anchor){
-
 
     anchor.addEventListener(
     "click",
     function(event){
 
-
         event.preventDefault();
-
-
 
         const target =
         document.querySelector(
         this.getAttribute("href")
         );
 
-
-
         if(target){
 
-
             target.scrollIntoView({
-
                 behavior:"smooth"
-
             });
-
 
         }
 
-
     });
-
 
 });
 
@@ -580,33 +904,23 @@ document
    WEDDING COUNTDOWN
 ===================================================== */
 
-
 const countdown =
 document.getElementById("countdown");
-
-
 
 const weddingDate =
 new Date("July 17, 2027 18:00:00").getTime();
 
-
-
 function updateCountdown(){
-
 
     if(!countdown){
         return;
     }
 
-
     const now =
     new Date().getTime();
 
-
     const distance =
     weddingDate - now;
-
-
 
     if(distance <= 0){
 
@@ -621,15 +935,11 @@ function updateCountdown(){
 
     }
 
-
-
     const days =
     Math.floor(
         distance /
         (1000 * 60 * 60 * 24)
     );
-
-
 
     const hours =
     Math.floor(
@@ -639,8 +949,6 @@ function updateCountdown(){
         (1000 * 60 * 60)
     );
 
-
-
     const minutes =
     Math.floor(
         (distance %
@@ -649,8 +957,6 @@ function updateCountdown(){
         (1000 * 60)
     );
 
-
-
     const seconds =
     Math.floor(
         (distance %
@@ -658,8 +964,6 @@ function updateCountdown(){
         /
         1000
     );
-
-
 
     countdown.innerHTML = `
 
@@ -693,13 +997,9 @@ function updateCountdown(){
 
     `;
 
-
 }
 
-
-
 updateCountdown();
-
 
 setInterval(
 updateCountdown,
@@ -851,60 +1151,60 @@ window.addEventListener("message", function(event) {
         dinoOverlay.style.pointerEvents = "auto";
 
         if (dinoOverlayTitle) {
-			
-			dinoOverlayTitle.setAttribute(
-				"data-it",
-				"🦖<br>Vuoi riprovare?"
-			);
 
-			dinoOverlayTitle.setAttribute(
-				"data-en",
-				"🦖<br>Play again?"
-			);
+            dinoOverlayTitle.setAttribute(
+                "data-it",
+                "🦖<br>Vuoi riprovare?"
+            );
 
-			dinoOverlayTitle.innerHTML =
-				currentLanguage === "it"
-					? dinoOverlayTitle.getAttribute("data-it")
-					: dinoOverlayTitle.getAttribute("data-en");
-					
+            dinoOverlayTitle.setAttribute(
+                "data-en",
+                "🦖<br>Play again?"
+            );
+
+            dinoOverlayTitle.innerHTML =
+                currentLanguage === "it"
+                    ? dinoOverlayTitle.getAttribute("data-it")
+                    : dinoOverlayTitle.getAttribute("data-en");
+
         }
 
         if (dinoLastScore) {
             dinoLastScore.style.display = "block";
 
-			dinoLastScore.setAttribute(
-				"data-it",
-				"Punteggio: " + finalScore
-			);
+            dinoLastScore.setAttribute(
+                "data-it",
+                "Punteggio: " + finalScore
+            );
 
-			dinoLastScore.setAttribute(
-				"data-en",
-				"Score: " + finalScore
-			);
+            dinoLastScore.setAttribute(
+                "data-en",
+                "Score: " + finalScore
+            );
 
-			dinoLastScore.textContent =
-				currentLanguage === "it"
-					? dinoLastScore.getAttribute("data-it")
-					: dinoLastScore.getAttribute("data-en");
+            dinoLastScore.textContent =
+                currentLanguage === "it"
+                    ? dinoLastScore.getAttribute("data-it")
+                    : dinoLastScore.getAttribute("data-en");
 
         }
 
         if (dinoStartButton) {
 
-			dinoStartButton.setAttribute(
-				"data-it",
-				"GIOCA ANCORA"
-			);
+            dinoStartButton.setAttribute(
+                "data-it",
+                "GIOCA ANCORA"
+            );
 
-			dinoStartButton.setAttribute(
-				"data-en",
-				"PLAY AGAIN"
-			);
+            dinoStartButton.setAttribute(
+                "data-en",
+                "PLAY AGAIN"
+            );
 
-			dinoStartButton.textContent =
-				currentLanguage === "it"
-					? dinoStartButton.getAttribute("data-it")
-					: dinoStartButton.getAttribute("data-en");
+            dinoStartButton.textContent =
+                currentLanguage === "it"
+                    ? dinoStartButton.getAttribute("data-it")
+                    : dinoStartButton.getAttribute("data-en");
 
         }
 
@@ -940,18 +1240,17 @@ async function loadDinoRanking() {
 
     try {
 
-		// console.log("Prima del fetch");
+        // console.log("Prima del fetch");
 
-		// const response = await fetch(DINO_RANKING_URL);
-		const response = await fetch(
-			DINO_RANKING_URL + "&_=" + Date.now(),
-			{
-				cache: "no-store"
-			}
-		);
+        // const response = await fetch(DINO_RANKING_URL);
+        const response = await fetch(
+            DINO_RANKING_URL + "&_=" + Date.now(),
+            {
+                cache: "no-store"
+            }
+        );
 
-
-		// console.log("Fetch completato", response.status);
+        // console.log("Fetch completato", response.status);
 
         if (!response.ok) {
             throw new Error("Unable to load ranking");
@@ -959,7 +1258,7 @@ async function loadDinoRanking() {
 
         const text = await response.text();
 
-		// console.log("Testo ricevuto:", text);
+        // console.log("Testo ricevuto:", text);
 
         // Google gviz returns JSON wrapped in a function call
         const jsonText = text.substring(
@@ -969,8 +1268,8 @@ async function loadDinoRanking() {
 
         const data = JSON.parse(jsonText);
 
-		// console.log("JSON interpretato:", data);
-		// console.log("Righe ricevute:", data.table.rows);
+        // console.log("JSON interpretato:", data);
+        // console.log("Righe ricevute:", data.table.rows);
 
         const scores = [];
 
@@ -1007,31 +1306,27 @@ async function loadDinoRanking() {
 
         });
 
-
         scores.sort(
             (a, b) => b.score - a.score
         );
 
-
         const topFive =
             scores.slice(0, 5);
 
-
         if (topFive.length === 0) {
 
-			rankingContainer.innerHTML = `
-				<div class="ranking-loading"
-					 data-it="Nessun punteggio ancora."
-					 data-en="No scores yet.">
-					${currentLanguage === "it"
-						? "Nessun punteggio ancora."
-						: "No scores yet."}
-				</div>
-			`;
-			
+            rankingContainer.innerHTML = `
+                <div class="ranking-loading"
+                     data-it="Nessun punteggio ancora."
+                     data-en="No scores yet.">
+                    ${currentLanguage === "it"
+                        ? "Nessun punteggio ancora."
+                        : "No scores yet."}
+                </div>
+            `;
+
             return;
         }
-
 
         rankingContainer.innerHTML =
             topFive
@@ -1066,20 +1361,19 @@ async function loadDinoRanking() {
             error
         );
 
-		rankingContainer.innerHTML = `
-			<div class="ranking-loading"
-				 data-it="Classifica non disponibile."
-				 data-en="Ranking unavailable.">
-				${currentLanguage === "it"
-					? "Classifica non disponibile."
-					: "Ranking unavailable."}
-			</div>
-		`;
+        rankingContainer.innerHTML = `
+            <div class="ranking-loading"
+                 data-it="Classifica non disponibile."
+                 data-en="Ranking unavailable.">
+                ${currentLanguage === "it"
+                    ? "Classifica non disponibile."
+                    : "Ranking unavailable."}
+            </div>
+        `;
 
     }
 
 }
-
 
 function escapeRankingHTML(text) {
 
@@ -1094,6 +1388,7 @@ function escapeRankingHTML(text) {
 
 
 /* Carosello foto dentro la tile Podere Calvanella */
+
 document.querySelectorAll(".photo-carousel").forEach(function (carousel) {
     const track = carousel.querySelector(".photo-carousel-track");
     const slides = Array.from(
@@ -1201,7 +1496,9 @@ document.querySelectorAll(".photo-carousel").forEach(function (carousel) {
     updateControls();
 });
 
+
 /* Arrotonda le foto senza cambiarne le dimensioni */
+
 document.querySelectorAll("img.split-section-image, .hero3-picture img").forEach(function (img) {
     function roundPhoto() {
         if (!img.naturalWidth || !img.naturalHeight) return;
@@ -1232,15 +1529,14 @@ document.querySelectorAll("img.split-section-image, .hero3-picture img").forEach
     roundPhoto();
 });
 
+
 /* =====================================================
    INITIAL LOAD
 ===================================================== */
 
-
 // document.addEventListener(
 // "DOMContentLoaded",
 // function(){
-
 
     // changeLanguage("it");
 
@@ -1248,12 +1544,11 @@ document.querySelectorAll("img.split-section-image, .hero3-picture img").forEach
         // successMessage.style.display="none";
     // }
 
-	// // Load ranking when website opens
-	// // console.log("Sto caricando la classifica");
-	// loadDinoRanking();
+    // // Load ranking when website opens
+    // // console.log("Sto caricando la classifica");
+    // loadDinoRanking();
 
 // });
-
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -1261,28 +1556,28 @@ document.addEventListener("DOMContentLoaded", function () {
         successMessage.style.display = "none";
     }
 
-const heroTitle = document.querySelector(".hero3 h1");
-const welcomeBox = document.querySelector(".hero3-welcome");
-const heroPicture = document.querySelector(".hero3-picture");
+    const heroTitle = document.querySelector(".hero3 h1");
+    const welcomeBox = document.querySelector(".hero3-welcome");
+    const heroPicture = document.querySelector(".hero3-picture");
 
-if (heroTitle && welcomeBox && heroPicture) {
-    function matchPictureWidth() {
-        const reference = window.innerWidth <= 600
-            ? welcomeBox
-            : heroTitle;
+    if (heroTitle && welcomeBox && heroPicture) {
+        function matchPictureWidth() {
+            const reference = window.innerWidth <= 600
+                ? welcomeBox
+                : heroTitle;
 
-        heroPicture.style.setProperty(
-            "--hero3-title-width",
-            `${reference.getBoundingClientRect().width}px`
-        );
+            heroPicture.style.setProperty(
+                "--hero3-title-width",
+                `${reference.getBoundingClientRect().width}px`
+            );
+        }
+
+        new ResizeObserver(matchPictureWidth).observe(heroTitle);
+        new ResizeObserver(matchPictureWidth).observe(welcomeBox);
+        window.addEventListener("resize", matchPictureWidth);
+        document.fonts.ready.then(matchPictureWidth);
+        matchPictureWidth();
     }
-
-    new ResizeObserver(matchPictureWidth).observe(heroTitle);
-    new ResizeObserver(matchPictureWidth).observe(welcomeBox);
-    window.addEventListener("resize", matchPictureWidth);
-    document.fonts.ready.then(matchPictureWidth);
-    matchPictureWidth();
-}
 
     loadDinoRanking();
 });
