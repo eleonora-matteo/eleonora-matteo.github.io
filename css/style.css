@@ -1904,3 +1904,21 @@ margin:20px 0 15px;
     outline: 2px solid var(--olive);
     outline-offset: 2px;
 }
+
+
+/* IBAN / BIC / RIB: evita overflow su schermi piccoli */
+
+.iban-box {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: clamp(20px, 5vw, 40px);
+}
+
+.iban-box p {
+    max-width: 100%;
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
