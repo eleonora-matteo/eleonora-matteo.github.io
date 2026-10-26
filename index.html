@@ -490,8 +490,8 @@ Story Game
 
 
 <p
-data-it="Ogni partecipante deve compilare individualmente il questionario RSVP (bambini esclusi)."
-data-en="Each guest must complete the RSVP questionnaire individually (children excluded).">
+data-it="Ogni partecipante deve compilare individualmente il questionario RSVP per confermare la propria presenza. Inizia inserendo il tuo nome. Ti chiederemo il cognome nel passaggio successivo."
+data-en="Each guest must complete the RSVP questionnaire individually to confirm their attendance. Start by entering your first name. We’ll ask for your last name in the next step.">
 Partecipanti
 </p>
 
@@ -568,6 +568,15 @@ data-en="We recommend taking a screenshot of this page in case you forget the de
 Ti consigliamo di fare uno screenshot di questa schermata nel caso dovessi dimenticare i dettagli. Non preoccuparti: noi non dimenticheremo la tua risposta!
 </span>
 </p>
+
+<button
+    id="rsvp-restart"
+    type="button"
+    data-it="Compila di nuovo il questionario"
+    data-en="Fill out the questionnaire again"
+    onclick="history.replaceState(null, '', '#rsvp'); window.location.reload();">
+    Compila di nuovo il questionario
+</button>
 
 
 
